@@ -1,58 +1,44 @@
 # Unstuck build specification (unstuck-spec)
 
-Internal build reference for the Unstuck capstone prototype. This folder is **not** the faculty submission PRD. The Google Doc PRD is the submission artifact; this site holds the detailed tables, prompts, eval cases, and workflow maps used during implementation.
+Build reference for the Unstuck capstone prototype. **Not** the faculty submission PRD (that is the Google Doc). This site holds fields, prompts, eval cases, workflows, and screening detail.
 
-## How to open
+## Live site (PRD link)
 
-1. Open `index.html` in any browser (double-click from Finder, or drag the file into Chrome).
-2. Use the top navigation to move between Journeys, Fields, Prompts, Wireframe map, Workflows, Screening, and Evaluation.
-3. For the interactive wireframe, use the link inside the site (Wireframe map page or hub notice) — https://tericampbell.github.io/unstuck_wireframe.html
+**https://tericampbell.github.io/unstuck-build-spec/index.html**
 
-No server or install is required. All pages are static HTML/CSS.
+Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/TeriCampbell/unstuck-build-spec). Unlisted public URL; disable via repo Settings → Pages → None when capstone review ends.
 
-## What is in here
+**Wireframe (separate PRD link):** https://tericampbell.github.io/unstuck_wireframe.html
 
-| Page | Purpose |
+## Edit locally
+
+1. Change files in this folder (`Desktop/AI PM Capstone/unstuck-spec/`).
+2. Upload changed files to [unstuck-build-spec on GitHub](https://github.com/TeriCampbell/unstuck-build-spec) (browser upload works).
+3. Wait 1–3 minutes; refresh the live URL.
+
+Or double-click `index.html` to preview without publishing.
+
+## Pages
+
+| File | Purpose |
 |------|---------|
-| `index.html` | Journey hub and filters |
-| `fields.html` | Required and optional AI inputs by prompt |
-| `prompts.html` | Prompt architecture, invocation rules, JSON shapes |
-| `wireframe.html` | Screen map aligned to wireframe v5 |
-| `workflows.html` | Integrated workflow + links to journey views |
-| `workflows-first-session.html` | New user → first plan |
-| `workflows-checkin-replan.html` | Check-in and replan loop |
+| `index.html` | Journey hub |
+| `fields.html` | Required / optional inputs |
+| `prompts.html` | Prompt architecture and JSON shapes |
+| `wireframe.html` | Screen map (links to live wireframe) |
+| `workflows.html` | Integrated workflow PNG |
+| `workflows-first-session.html` | First session diagram |
+| `workflows-checkin-replan.html` | Check-in / replan diagram |
 | `screening.html` | Four-tier distress screening |
-| `eval.html` | Objective/subjective criteria and test cases T1–N6 |
-| `images/` | PNG exports for PRD and portfolio |
+| `eval.html` | Criteria and test cases T1–N6 |
 
-## PNG workflow figures
+## PNG files
 
-- `images/integrated-workflow.png` — Design section (student + counselor)
-- `images/workflow-first-session.png` — Develop / build reference
-- `images/workflow-checkin-replan.png` — Develop / build reference
+On GitHub, PNGs are at the **repo root** (upload flattened the folder). Local copy may still use `images/` subfolder.
 
-Regenerate HTML screenshots after diagram edits:
+## Private backup
 
-```bash
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-  --headless=new --disable-gpu --window-size=720,2600 \
-  --screenshot="images/workflow-first-session.png" \
-  "file:///FULL/PATH/TO/unstuck-spec/workflows-first-session.html"
-```
-
-Replace the URL path with your machine path (encode spaces as `%20`).
-
-## GitHub placement
-
-This folder lives in the **private** repo: `TeriCampbell/maven-capstone` → `docs/unstuck/build-spec`.
-
-**Clickable link for the PRD (after you enable Pages — see `PRD_CLICKABLE_LINKS.md` on Desktop):**
-
-https://tericampbell.github.io/maven-capstone/unstuck/build-spec/index.html
-
-Faculty need the repo invite **and** to be logged into GitHub. A `github.com/.../tree/...` link only shows files, not the running site.
-
-**Wireframe in PRD (public):** https://tericampbell.github.io/unstuck_wireframe.html
+Copy also lives in `TeriCampbell/maven-capstone` at `docs/unstuck/build-spec/` (optional; not the PRD link).
 
 ## Maintainer
 
