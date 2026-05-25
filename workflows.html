@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Integrated workflow</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="workflows-shared.css">
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Workflows · portfolio &amp; build reference</div>
+  </div>
+  <div class="meta">Wireframe v5</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html" class="active">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Workflows</h1>
+  <p class="lead">
+    How Unstuck works end to end for students and counselors. Use the tabs for journey-specific views;
+    this page shows the integrated map used in the PRD Design section.
+  </p>
+
+  <nav class="workflow-tabs" aria-label="Workflow views">
+    <a href="workflows.html" class="active">Integrated (primary)</a>
+    <a href="workflows-first-session.html">Student first session</a>
+    <a href="workflows-checkin-replan.html">Check-in &amp; replan</a>
+  </nav>
+
+  <h2>Integrated student and counselor workflow</h2>
+  <p class="section-note">
+    Primary capstone figure: Matt and Ms. Smith in parallel, with one cross-lane connection when the student requests counselor support.
+  </p>
+
+  <figure>
+    <img class="workflow-img" src="images/integrated-workflow.png" alt="Figure: Integrated Student and Counselor Workflow">
+    <figcaption style="font-size:0.82rem;color:var(--muted);margin-top:8px;">
+      Figure: Integrated Student and Counselor Workflow
+    </figcaption>
+  </figure>
+
+  <h2>Two parallel lanes</h2>
+  <div class="two-lane">
+    <div class="lane">
+      <h3>Matt — student</h3>
+      <p class="role">Primary end user</p>
+      <ol>
+        <li>Discovers Unstuck; creates account and optional trusted contact</li>
+        <li>First plan via structured intake + AI plan generation</li>
+        <li>Email check-ins, replan when behind, plan update when life changes</li>
+        <li>Optionally notifies counselor (name + flag only)</li>
+      </ol>
+      <p style="font-size:0.82rem;margin-top:12px;">
+        Detail: <a href="workflows-first-session.html">First session</a> ·
+        <a href="workflows-checkin-replan.html">Check-in &amp; replan</a>
+      </p>
+    </div>
+    <div class="lane">
+      <h3>Ms. Smith — counselor</h3>
+      <p class="role">Institutional path · v2 revenue</p>
+      <ol>
+        <li>Organic discovery via student mention</li>
+        <li>Pilot: compliance review, referrals, aggregate dashboard</li>
+        <li>Contact requests and pattern observations (no individual session text by default)</li>
+        <li>Pilot data supports institutional license conversation</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="cross-link">
+    <strong>Cross-lane link:</strong> Student-initiated counselor contact during check-in or support flow.
+    Ms. Smith receives name + support flag, not intake or plan content, unless the student separately shares under trusted-contact permissions.
+  </div>
+
+  <h2>Map to prototype and demo</h2>
+  <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li><strong>Build:</strong> Matt first session + at least one check-in/replan cycle</li>
+    <li><strong>Demo:</strong> Integrated story with brief counselor dashboard (screens 15–17, demo data)</li>
+    <li><strong>Wireframe:</strong> <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Interactive v5</a> · <a href="wireframe.html">Screen map</a></li>
+  </ul>
+
+  <p class="page-footer">
+    <a href="workflows-first-session.html">Next: Student first session →</a> ·
+    <a href="index.html">Journeys hub</a>
+  </p>
+</main>
+
+</body>
+</html>

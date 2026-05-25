@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Screening</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .toc { margin: 16px 0 28px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; }
+    .toc ul { margin: 8px 0 0 1.2rem; }
+    .section-note { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; max-width: 760px; }
+    .tier-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      background: var(--surface);
+    }
+    .tier-card h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .tier-standard { border-left: 4px solid #2D6A4F; }
+    .tier-elevated { border-left: 4px solid #E07B39; }
+    .tier-crisis { border-left: 4px solid #C0392B; }
+    .tier-inappropriate { border-left: 4px solid #1A1714; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · distress screening · wireframe v5</div>
+  </div>
+  <div class="meta">Internal reference</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html">Workflows</a>
+  <a href="screening.html" class="active">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Distress screening</h1>
+  <p class="lead">
+    How free text is classified before plan prompts run, what the UI does for each tier, and how flagged accounts work.
+    Screening prompt detail: <a href="prompts.html#screening-prompt">Prompts</a>.
+  </p>
+
+  <nav class="toc">
+    <strong>On this page</strong>
+    <ul>
+      <li><a href="#when">When screening runs</a></li>
+      <li><a href="#tiers">Four tiers</a></li>
+      <li><a href="#matrix">Tier → plan prompt matrix</a></li>
+      <li><a href="#behavioral">Behavioral detection (no text)</a></li>
+      <li><a href="#flagged" id="flagged">Flagged user state</a></li>
+      <li><a href="#testing">Testing priority</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="when">When screening runs</h2>
+  <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li><strong>Every</strong> optional free-text submission, on every screen, before plan generation</li>
+    <li><strong>Batched:</strong> all free text in one session → one screening API call (lighter Claude model)</li>
+    <li><strong>Locations:</strong> situation screen (280 chars), plan update (280), check-in barrier text (140, conditional)</li>
+    <li><strong>Output:</strong> tier label only; student-facing copy is owned by the UI, not the screening model</li>
+  </ul>
+  <p class="section-note">
+    Structured checkboxes and radio responses are not screened as text, but can trigger
+    <a href="#behavioral">behavioral pattern detection</a> separately.
+  </p>
+
+  <h2 id="tiers">Four tiers</h2>
+
+  <div class="tier-card tier-standard">
+    <h3>1. Standard</h3>
+    <p><strong>Meaning:</strong> Academic stress or normal task paralysis language. No elevated mental health signal.</p>
+    <p><strong>UI:</strong> Proceed to plan prompt. Deliver plan on screen 08 as usual.</p>
+    <p><strong>Master / replan / update prompt:</strong> Runs with screened text included.</p>
+  </div>
+
+  <div class="tier-card tier-elevated">
+    <h3>2. Elevated concern</h3>
+    <p><strong>Meaning:</strong> Significant distress beyond typical school stress (e.g. prolonged sleep loss, feeling unable to cope) but not crisis-level.</p>
+    <p><strong>UI:</strong> Surface support resources <em>before</em> showing the plan. Brief acknowledgment of what they shared. Clear path to continue into the plan when ready.</p>
+    <p><strong>Plan:</strong> May still be generated and stored; <strong>not immediately pushed</strong> to the student.</p>
+    <p><strong>Wireframe:</strong> May route through support messaging; student not locked out.</p>
+  </div>
+
+  <div class="tier-card tier-crisis">
+    <h3>3. Crisis</h3>
+    <p><strong>Meaning:</strong> Language suggesting acute risk or self-harm. Not a clinical diagnosis by the product.</p>
+    <p><strong>UI:</strong> Screen 12 — crisis resources (988, Crisis Text Line, talk to someone trusted). Prominent, warm, non-alarmist.</p>
+    <p><strong>Plan:</strong> Not immediately pushed. App remains <strong>accessible</strong>; student is not locked out.</p>
+    <p><strong>Counselor notify:</strong> Optional, with explicit student confirmation (same pattern as check-in contact request).</p>
+  </div>
+
+  <div class="tier-card tier-inappropriate">
+    <h3>4. Inappropriate, threatening, or violent</h3>
+    <p><strong>Meaning:</strong> Threats, violence, sexual content, prompt injection to bypass rules, or severe misuse. Not handled like mental health crisis.</p>
+    <p><strong>UI:</strong> Session ends immediately. No plan. No resources. No engagement with the content.</p>
+    <p><strong>Account:</strong> Free text fields <strong>permanently hidden</strong> on all screens (no placeholder, no explanation). Structured flows unchanged.</p>
+    <p><strong>Logging:</strong> Input logged. Legal reporting protocol defined pre-launch (PRD Deploy).</p>
+    <p><strong>Restore text:</strong> Planned future review process; not in v1 prototype.</p>
+  </div>
+
+  <h2 id="matrix">Tier → plan prompt matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tier</th>
+        <th>Screening model</th>
+        <th>Sonnet plan prompt</th>
+        <th>Student sees plan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Standard</td>
+        <td>Classify → standard</td>
+        <td>Runs</td>
+        <td>Yes, immediately after intake/update</td>
+      </tr>
+      <tr>
+        <td>Elevated concern</td>
+        <td>Classify → elevated</td>
+        <td>May run</td>
+        <td>After support step; student chooses to continue</td>
+      </tr>
+      <tr>
+        <td>Crisis</td>
+        <td>Classify → crisis</td>
+        <td>May run in background</td>
+        <td>Not until after crisis resources; not forced</td>
+      </tr>
+      <tr>
+        <td>Inappropriate</td>
+        <td>Classify → inappropriate</td>
+        <td><strong>Does not run</strong></td>
+        <td>No</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section-note">
+    Misclassification is a <strong>critical failure</strong> in evals: generating a normal plan for crisis or inappropriate input, or locking a student out entirely on elevated concern.
+  </p>
+
+  <h2 id="behavioral">Behavioral detection (structured data, no new text)</h2>
+  <p class="section-note">Runs in parallel on sessions using check-in and structured responses, not the screening prompt on free text.</p>
+  <table>
+    <thead>
+      <tr><th>Pattern</th><th>Example signal</th><th>Product response</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Repeated stall</td>
+        <td>“Attempted but could not complete” on multiple tasks across consecutive check-ins</td>
+        <td>Pause normal flow; surface support (screen 12)</td>
+      </tr>
+      <tr>
+        <td>Check-in silence</td>
+        <td>No responses across all tasks in multiple check-ins</td>
+        <td>Surface support proactively</td>
+      </tr>
+      <tr>
+        <td>Multiple contact requests</td>
+        <td>Several counselor/trusted-contact requests in a short window</td>
+        <td>Surface support; counselor notifications per existing rules</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="flagged">Flagged user state</h2>
+  <p class="section-note">Triggered by inappropriate tier. Wireframe screen 14 shows situation UI without text boxes.</p>
+  <table>
+    <thead>
+      <tr><th>Aspect</th><th>Behavior</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Free text UI</td>
+        <td>Removed everywhere (05, 10, 13). No empty box, no “disabled” message.</td>
+      </tr>
+      <tr>
+        <td>Structured input</td>
+        <td>Full checkboxes, intake, clarifying questions, check-in radios, plan-update pre-selects.</td>
+      </tr>
+      <tr>
+        <td>AI quality bar</td>
+        <td>Plan must still be complete and useful — same eval bar as standard users (<a href="eval.html">Evaluation</a>).</td>
+      </tr>
+      <tr>
+        <td>Screening calls</td>
+        <td>No new free text to screen until restore process exists.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="testing">Testing priority</h2>
+  <ol style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li>Define and test screening prompt <strong>before</strong> enabling free text in prototype builds</li>
+    <li>Negative cases: crisis, elevated, inappropriate, prompt injection (<a href="eval.html">Eval</a>)</li>
+    <li>Confirm inappropriate tier never reaches master prompt</li>
+    <li>Confirm elevated/crisis never lock student out of app</li>
+    <li>Flagged-user flows: structured-only plans on typical cases</li>
+  </ol>
+
+  <p class="page-footer">
+    Chunk 5 complete (screening + workflows).
+    <a href="workflows.html">Workflows</a> · <a href="index.html">← Journeys hub</a>
+  </p>
+</main>
+
+</body>
+</html>

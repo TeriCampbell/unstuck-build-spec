@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Student first session workflow</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="workflows-shared.css">
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Workflows · student first session</div>
+  </div>
+  <div class="meta">New user → first plan</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html" class="active">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Student first session</h1>
+  <p class="lead">
+    New user path from signup through first plan delivery. Skips dashboard (screen 04) until a later return visit.
+    AI: screening (if text) → master prompt (Sonnet).
+  </p>
+
+  <nav class="workflow-tabs" aria-label="Workflow views">
+    <a href="workflows.html">Integrated (primary)</a>
+    <a href="workflows-first-session.html" class="active">Student first session</a>
+    <a href="workflows-checkin-replan.html">Check-in &amp; replan</a>
+  </nav>
+
+  <figure style="margin:0 0 24px;">
+    <img class="workflow-img" src="images/workflow-first-session.png" alt="Student first session workflow diagram">
+    <figcaption style="font-size:0.82rem;color:var(--muted);margin-top:8px;">Figure: Student first session (export for PRD / portfolio)</figcaption>
+  </figure>
+
+  <div class="flow-viz" role="img" aria-label="First session workflow diagram">
+    <div class="flow-viz-title">Student first session — Matt</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 01</strong>
+        Home / landing
+        <span class="sub">Sign up or log in</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 02</strong>
+        Account + age gate
+        <span class="sub">Grade level captured → used by AI</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 03</strong>
+        Trusted contact (optional)
+        <span class="sub">Permissions for sharing; skippable</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-optional">New users go directly to situation — not dashboard</div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 05</strong>
+        Situation selection
+        <span class="sub">Checkboxes + optional 280-char text per selection</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-branch">
+      <div class="flow-box flow-screen">
+        <strong>If free text</strong>
+        Distress screening (lighter model)
+        <span class="sub">Batched per session · four tiers</span>
+      </div>
+      <div class="flow-optional" style="margin-top:8px;">Inappropriate → stop, no plan, flag account</div>
+      <div class="flow-optional">Elevated / crisis → support first; plan may be delayed</div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 06</strong>
+        Intake
+        <span class="sub">Tasks: name, due date, deadline type</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 07</strong>
+        Clarifying questions
+        <span class="sub">Time available, started?, difficulty, deadline changes</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ai">
+        <strong>AI</strong>
+        Master prompt (Sonnet)
+        <span class="sub">Acknowledgment + full-scope plan + next 7 days</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 08</strong>
+        Plan delivery
+        <span class="sub">Include / exclude / ask me later on resources</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 09</strong>
+        Toolkit (optional)
+        <span class="sub">Resources from plan; click tracking in Unstuck only</span>
+      </div>
+    </div>
+
+    <div class="flow-legend">
+      <span class="legend-ui">Student UI</span>
+      <span class="legend-screen">Screening</span>
+      <span class="legend-ai">Plan generation</span>
+    </div>
+  </div>
+
+  <h2>Narrative</h2>
+  <p class="section-note">
+    Matt is overwhelmed but not in crisis. He selects what is going on, lists deadlines, and answers a few structured questions.
+    The product’s job in this loop is to replace paralysis with a ordered plan he can start tonight without shame language.
+  </p>
+  <ol style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li>Structured intake does the heavy lifting; free text sharpens acknowledgment only if he uses it.</li>
+    <li>One screening call per session if any text was submitted.</li>
+    <li>Plan is JSON from Sonnet; UI renders toggles and resource choices.</li>
+    <li>He may share a plan summary with a trusted contact; that is separate from AI input.</li>
+  </ol>
+
+  <h2>Related spec</h2>
+  <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li><a href="fields.html#master">Required fields — master prompt</a></li>
+    <li><a href="prompts.html#master">Master prompt rules</a></li>
+    <li><a href="screening.html">Distress screening tiers</a></li>
+    <li><a href="index.html">Journey filter: New student → first plan</a></li>
+    <li><a href="wireframe.html">Wireframe screens 01–09</a></li>
+  </ul>
+
+  <p class="page-footer">
+    <a href="workflows.html">← Integrated workflow</a> ·
+    <a href="workflows-checkin-replan.html">Check-in &amp; replan →</a>
+  </p>
+</main>
+
+</body>
+</html>

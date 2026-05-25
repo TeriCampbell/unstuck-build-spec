@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Check-in and replan workflow</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="workflows-shared.css">
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Workflows · check-in &amp; replan</div>
+  </div>
+  <div class="meta">Returning student · accountability loop</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html" class="active">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Check-in and replan loop</h1>
+  <p class="lead">
+    How Unstuck stays current after the first plan: email check-in, student-reported progress, then adaptive replan when needed.
+    Not the same as “next step only” (continuation) or “something changed” (plan update on screen 13).
+  </p>
+
+  <nav class="workflow-tabs" aria-label="Workflow views">
+    <a href="workflows.html">Integrated (primary)</a>
+    <a href="workflows-first-session.html">Student first session</a>
+    <a href="workflows-checkin-replan.html" class="active">Check-in &amp; replan</a>
+  </nav>
+
+  <figure style="margin:0 0 24px;">
+    <img class="workflow-img" src="images/workflow-checkin-replan.png" alt="Check-in and replan workflow diagram">
+    <figcaption style="font-size:0.82rem;color:var(--muted);margin-top:8px;">Figure: Check-in and replan loop (export for PRD / portfolio)</figcaption>
+  </figure>
+
+  <div class="flow-viz" role="img" aria-label="Check-in and replan workflow diagram">
+    <div class="flow-viz-title">Check-in &amp; replan loop — Matt</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-email">
+        <strong>Email</strong>
+        Check-in notification
+        <span class="sub">Tokenized link · no login required</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 10</strong>
+        Check-in response
+        <span class="sub">Per task: done / in progress / no / attempted / contact counselor</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-branch">
+      <div class="flow-box flow-screen">
+        <strong>If “attempted” + 140-char text</strong>
+        Distress screening
+      </div>
+    </div>
+    <div class="flow-branch">
+      <div class="flow-box flow-support">
+        <strong>If contact counselor chosen</strong>
+        Disclosure + confirm → notify Ms. Smith (screen 17)
+        <span class="sub">Name + flag only · not plan content</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 11</strong>
+        Progress summary
+        <span class="sub">Built from check-in answers · confidence radio</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-optional">Student may log in later or tap “Update my plan”</div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-dash">
+        <strong>Screen 04</strong>
+        Dashboard (return visit)
+        <span class="sub">Shows progress from check-ins, not auto-tracking</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-optional">If tasks incomplete or “attempted but could not complete”</div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ai">
+        <strong>AI</strong>
+        Adaptive replanning (Sonnet)
+        <span class="sub">Prior plan + check-in history + dates → new scope + 7 days</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
+        <strong>Screen 08</strong>
+        Updated plan
+      </div>
+    </div>
+
+    <div class="flow-branch" style="margin-top:16px;">
+      <div class="flow-box flow-support">
+        <strong>Parallel: behavioral patterns</strong>
+        Repeated stalls or silent check-ins → screen 12 support
+        <span class="sub">Structured data only · no free text required</span>
+      </div>
+    </div>
+
+    <div class="flow-legend">
+      <span class="legend-ui">Student UI</span>
+      <span class="legend-email">Email / token</span>
+      <span class="legend-screen">Screening</span>
+      <span class="legend-ai">Replan</span>
+    </div>
+  </div>
+
+  <h2>What this loop is not</h2>
+  <table>
+    <thead>
+      <tr><th>Different path</th><th>How it differs</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="prompts.html#continuation">Plan continuation</a></td>
+        <td>Dashboard “I am on track” → <strong>one</strong> next action, not full replan</td>
+      </tr>
+      <tr>
+        <td><a href="prompts.html#update">Plan update</a></td>
+        <td>Screen 13: deadline changed, new item, etc. — student-driven change, not check-in-driven</td>
+      </tr>
+      <tr>
+        <td><a href="workflows-first-session.html">First session</a></td>
+        <td>Full intake from empty state; master prompt, not replan</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Narrative</h2>
+  <p class="section-note">
+    The check-in loop is the accountability layer. Unstuck does not spy on Khan Academy or homework apps;
+    it asks Matt what happened and adjusts the plan when he reports he is behind. That keeps trust and fits FERPA-minimal data collection.
+  </p>
+
+  <h2>Related spec</h2>
+  <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li><a href="fields.html#replan">Required fields — adaptive replanning</a></li>
+    <li><a href="fields.html#optional">Optional: 140-char “what got in the way?”</a></li>
+    <li><a href="index.html">Journey filter: Check-in → replan</a></li>
+    <li><a href="wireframe.html">Wireframe screens 10–11, 04, 08</a></li>
+  </ul>
+
+  <p class="page-footer">
+    <a href="workflows-first-session.html">← First session</a> ·
+    <a href="workflows.html">Integrated workflow</a>
+  </p>
+</main>
+
+</body>
+</html>

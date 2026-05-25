@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Fields</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .toc { margin: 16px 0 28px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; }
+    .toc ul { margin: 8px 0 0 1.2rem; }
+    .toc li { margin-bottom: 6px; }
+    .section-note { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; max-width: 720px; }
+    .req-yes { color: var(--accent); font-weight: 700; }
+    .req-cond { color: var(--amber); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · input fields · wireframe v5</div>
+  </div>
+  <div class="meta">Internal reference</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html" class="active">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Input fields</h1>
+  <p class="lead">
+    What the AI receives, by prompt. Student-facing fields come from wireframe screens;
+    system fields are added by the application. Tone is not a student input; it lives in the system prompt.
+    Students can type in optional, character-limited text boxes on specific screens; those are not a separate chat product mode.
+  </p>
+
+  <nav class="toc" aria-label="On this page">
+    <strong>On this page</strong>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#master">Master prompt (first plan)</a></li>
+      <li><a href="#optional">Optional student fields</a></li>
+      <li><a href="#screening">Distress screening prompt</a></li>
+      <li><a href="#replan">Adaptive replanning prompt</a></li>
+      <li><a href="#continuation">Plan continuation prompt</a></li>
+      <li><a href="#update">Plan update prompt</a></li>
+      <li><a href="#not-sent">Not sent to the AI</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="overview">Overview</h2>
+  <p class="section-note">
+    <strong>Text input vs. chat:</strong> Unstuck includes optional free-text fields (situation, check-in, plan update) with character limits and distress screening on every submission. It does not offer a general-purpose chat thread where the student and model go back and forth without structured intake. Required inputs are mostly structured selections and dates; free text adds context when the student chooses to use it. See
+    <a href="#optional">optional fields</a>,
+    <a href="screening.html">Screening</a>, and
+    <a href="index.html">Journeys</a>.
+  </p>
+
+  <h2 id="master">Master prompt (first plan generation)</h2>
+  <p class="section-note">Journey: <a href="index.html">New student → first plan</a>. Wireframe screens 02 (grade), 05, 06, 07, then 08 delivery.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Format</th>
+        <th>Source</th>
+        <th>Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Situation selection(s)</td>
+        <td>Multi-select from fixed list</td>
+        <td>Screen 05 — Situation</td>
+        <td class="req-yes">Yes (≥1)</td>
+      </tr>
+      <tr>
+        <td colspan="4" style="font-size:0.82rem;color:var(--muted);">
+          Options include: multiple deadlines; single task stuck; SAT/AP prep; college essay; college applications; prioritize workload; test/exam prep
+        </td>
+      </tr>
+      <tr>
+        <td>Grade level</td>
+        <td>Grade 9–12</td>
+        <td>Screen 02 — Account setup</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Task list</td>
+        <td>Array of task objects</td>
+        <td>Screen 06 — Intake (≥1 task)</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>→ Task name</td>
+        <td>Dropdown per situation category</td>
+        <td>Intake — per task</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>→ Due date / test date</td>
+        <td>Date (ISO)</td>
+        <td>Intake — per task</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>→ Deadline type</td>
+        <td>Hard cutoff | Teacher-assigned | Self-imposed</td>
+        <td>Intake — per task</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Available time</td>
+        <td>Fixed range (e.g. 1 hr, 2 hrs, 3 hrs, 4+ hrs)</td>
+        <td>Screen 07 — Clarifying questions</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Started status</td>
+        <td>Not started any | Started one or two | Partially done with most</td>
+        <td>Screen 07</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Task difficulty</td>
+        <td>Fixed scale (e.g. none | one | most)</td>
+        <td>Screen 07</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Deadline changes since intake</td>
+        <td>No changes | One changed | Multiple changed</td>
+        <td>Screen 07 (first plan only)</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Screening classification</td>
+        <td>Standard | Elevated concern | Crisis | Inappropriate</td>
+        <td>Lighter Claude model; batched session free text</td>
+        <td class="req-cond">Yes if free text submitted</td>
+      </tr>
+      <tr>
+        <td>Current date</td>
+        <td>Date</td>
+        <td>System</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Resource library</td>
+        <td>Allowlisted names, descriptions, URLs, lead times</td>
+        <td>System prompt (product-maintained)</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Flagged account state</td>
+        <td>Boolean (free text disabled)</td>
+        <td>Account / prior screening</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section-note">
+    <strong>Gate:</strong> If tier is inappropriate or threatening, the master prompt does not run.
+    Elevated and crisis tiers may still generate a plan but UI gates delivery (<a href="screening.html">Screening</a>).
+  </p>
+
+  <h2 id="optional">Optional student fields</h2>
+  <p class="section-note">
+    Optional for the student; when present, screened and passed to the model. Hidden entirely for flagged accounts (no placeholder).
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Format</th>
+        <th>Source</th>
+        <th>Used by prompt(s)</th>
+        <th>Impact on output</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Situation free text</td>
+        <td>Max 280 characters</td>
+        <td>Screen 05 — per selected checkbox<br>&ldquo;What is the most urgent thing on your plate right now?&rdquo;</td>
+        <td>Screening → Master</td>
+        <td>Calibrates acknowledgment and prioritization; merges with checkbox context. Plan still generated from checkboxes alone if skipped.</td>
+      </tr>
+      <tr>
+        <td>Check-in barrier text</td>
+        <td>Max 140 characters</td>
+        <td>Screen 10 — only if &ldquo;attempted but could not complete&rdquo;</td>
+        <td>Screening → Adaptive replanning</td>
+        <td>Short context for why a step stalled; informs replan tone and sequencing. Not shown for yes / no / in progress.</td>
+      </tr>
+      <tr>
+        <td>Plan update free text</td>
+        <td>Max 280 characters</td>
+        <td>Screen 13 — alongside change-state checkboxes</td>
+        <td>Screening → Plan update</td>
+        <td>Adds nuance to deadline shifts, new items, or time conflicts. Pre-selects alone can drive update for flagged users.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="screening">Distress screening prompt</h2>
+  <p class="section-note">Lighter Claude model. Returns classification only; UI handles student-facing responses. Runs before plan prompts when free text exists.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Format</th>
+        <th>Source</th>
+        <th>Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Free text submitted in session</td>
+        <td>One batched payload (situation and/or plan-update text on first session; check-in text on replan session)</td>
+        <td>Screens 05, 13, or 10 (conditional)</td>
+        <td class="req-yes">Yes (≥1 string to classify)</td>
+      </tr>
+      <tr>
+        <td>Field origin metadata</td>
+        <td>Which surface submitted text (situation | plan_update | check_in)</td>
+        <td>Application</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section-note"><strong>Output:</strong> Tier label only (standard, elevated concern, crisis, inappropriate/threatening).</p>
+
+  <h2 id="replan">Adaptive replanning prompt</h2>
+  <p class="section-note">Journey: <a href="index.html">Check-in → replan</a>. After incomplete or attempted-but-not-complete check-ins.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Format</th>
+        <th>Source</th>
+        <th>Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Prior plan</td>
+        <td>Structured JSON (full scope + seven-day view)</td>
+        <td>Database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Check-in history</td>
+        <td>Per task: yes | no | in progress | attempted but could not complete | contact counselor</td>
+        <td>Screen 10 → database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Task deadlines and types</td>
+        <td>From stored plan / intake</td>
+        <td>Database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Current date</td>
+        <td>Date</td>
+        <td>System</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Resource library</td>
+        <td>Allowlisted entries</td>
+        <td>System prompt</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Flagged account state</td>
+        <td>Boolean</td>
+        <td>Account</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Screening classification</td>
+        <td>Four tiers</td>
+        <td>Screening on new free text in session</td>
+        <td class="req-cond">Yes if free text submitted</td>
+      </tr>
+      <tr>
+        <td>Check-in barrier text</td>
+        <td>Max 140 characters</td>
+        <td>Screen 10 (conditional)</td>
+        <td class="req-cond">Optional — see <a href="#optional">optional fields</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="continuation">Plan continuation prompt</h2>
+  <p class="section-note">Journey: <a href="index.html">Return → next step only</a>. Dashboard button on screen 04. Narrow output: one next action.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Format</th>
+        <th>Source</th>
+        <th>Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Current plan</td>
+        <td>Structured JSON</td>
+        <td>Database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Check-in history</td>
+        <td>Per-task enum (same as replan)</td>
+        <td>Database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Current date</td>
+        <td>Date</td>
+        <td>System</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Flagged account state</td>
+        <td>Boolean</td>
+        <td>Account</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="update">Plan update prompt</h2>
+  <p class="section-note">Journey: <a href="index.html">Return → plan update</a>. Screens 04 → 13.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Format</th>
+        <th>Source</th>
+        <th>Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Prior plan</td>
+        <td>Structured JSON</td>
+        <td>Database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Check-in history</td>
+        <td>Per-task enum</td>
+        <td>Database</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Change-state selection(s)</td>
+        <td>Multi-select: deadline changed | completed early | add item | time affected | item no longer relevant</td>
+        <td>Screen 13 — Plan update</td>
+        <td class="req-yes">Yes (≥1)</td>
+      </tr>
+      <tr>
+        <td>Current date</td>
+        <td>Date</td>
+        <td>System</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Resource library</td>
+        <td>Allowlisted entries</td>
+        <td>System prompt</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Flagged account state</td>
+        <td>Boolean</td>
+        <td>Account</td>
+        <td class="req-yes">Yes</td>
+      </tr>
+      <tr>
+        <td>Screening classification</td>
+        <td>Four tiers</td>
+        <td>Screening on plan-update free text</td>
+        <td class="req-cond">Yes if free text submitted</td>
+      </tr>
+      <tr>
+        <td>Plan update free text</td>
+        <td>Max 280 characters</td>
+        <td>Screen 13</td>
+        <td class="req-cond">Optional — see <a href="#optional">optional fields</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="not-sent">Not sent to the AI</h2>
+  <p class="section-note">Collected for product behavior, compliance, or analytics; not in plan-generation payloads in v1.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Why not in model payload</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Account email, OAuth identifiers</td>
+        <td>Authentication only</td>
+      </tr>
+      <tr>
+        <td>Trusted contact name, permissions, notification prefs</td>
+        <td>Routing and sharing UI; not used for plan content in v1</td>
+      </tr>
+      <tr>
+        <td>Resource include / exclude / ask me later choices</td>
+        <td>UI and toolkit state after plan is shown; informs future sessions, not initial generation input</td>
+      </tr>
+      <tr>
+        <td>Counselor dashboard configuration (screen 16)</td>
+        <td>Demo/static in v1; student library is system prompt, not live counselor config</td>
+      </tr>
+      <tr>
+        <td>Click events on resource links</td>
+        <td>Analytics events in database, not LLM input</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="page-footer">
+    Chunk 2 complete. Next: <a href="prompts.html">Prompts &amp; output</a> (chunk 3).
+    <a href="index.html">← Journeys hub</a>
+  </p>
+</main>
+
+</body>
+</html>

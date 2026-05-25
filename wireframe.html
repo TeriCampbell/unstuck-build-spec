@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Wireframe map</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .toc { margin: 16px 0 28px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; }
+    .toc ul { margin: 8px 0 0 1.2rem; }
+    .section-note { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; max-width: 760px; }
+    .wireframe-link {
+      display: inline-block;
+      margin: 12px 0 20px;
+      padding: 12px 18px;
+      background: var(--accent-lt);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .wireframe-link:hover { text-decoration: underline; }
+    table td { font-size: 0.82rem; }
+    .mono { font-family: "Courier New", monospace; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · wireframe v5 · 17 screens</div>
+  </div>
+  <div class="meta">Internal reference</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html" class="active">Wireframe map</a>
+  <a href="workflows.html">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Wireframe map</h1>
+  <p class="lead">
+    Every student and counselor screen in wireframe v5: route, data collected, AI involvement, and which user journey uses the screen.
+  </p>
+
+  <a class="wireframe-link" href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">
+    Open interactive wireframe v5 (17 screens) →
+  </a>
+
+  <nav class="toc">
+    <strong>On this page</strong>
+    <ul>
+      <li><a href="#filter">Filter by journey</a></li>
+      <li><a href="#student">Student screens (01–14)</a></li>
+      <li><a href="#counselor">Counselor screens (15–17)</a></li>
+      <li><a href="#paths">Common paths</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="filter">Filter by journey</h2>
+  <p class="section-note">Shows only rows for screens used on that path. Screen 14 is a state variant, not a separate route in production.</p>
+  <div class="filter-bar" data-wireframe-filter>
+    <button type="button" data-filter="all" class="active">All screens</button>
+    <button type="button" data-filter="first-plan">New → first plan</button>
+    <button type="button" data-filter="return">Return user</button>
+    <button type="button" data-filter="checkin">Check-in path</button>
+    <button type="button" data-filter="crisis">Crisis / support</button>
+    <button type="button" data-filter="flagged">Flagged state</button>
+    <button type="button" data-filter="counselor">Counselor</button>
+    <button type="button" data-filter="account">Account setup only</button>
+  </div>
+
+  <h2 id="student">Student screens (01–14)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Screen</th>
+        <th>Route</th>
+        <th>Fields / data collected</th>
+        <th>AI</th>
+        <th>Journeys</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-journey="account all first-plan return checkin">
+        <td>01</td>
+        <td>Home / Landing</td>
+        <td class="mono">unstuck.app</td>
+        <td>Auth choice (Google, email, login). No AI input.</td>
+        <td>None</td>
+        <td>All</td>
+      </tr>
+      <tr data-journey="account first-plan all">
+        <td>02</td>
+        <td>Account creation &amp; age gate</td>
+        <td class="mono">/signup</td>
+        <td>Email; month/year of birth; optional state, school type; <strong>grade level</strong> (→ master prompt).</td>
+        <td>None</td>
+        <td>first-plan, account</td>
+      </tr>
+      <tr data-journey="account first-plan all">
+        <td>03</td>
+        <td>Trusted contact setup</td>
+        <td class="mono">/setup</td>
+        <td>Contact name, email; visibility checkboxes. Optional, skippable. Not sent to plan prompts in v1.</td>
+        <td>None</td>
+        <td>first-plan, account</td>
+      </tr>
+      <tr data-journey="return all checkin first-plan">
+        <td>04</td>
+        <td>Student dashboard</td>
+        <td class="mono">/dashboard</td>
+        <td>Read-only plan, toolkit, ask me later. Actions: next step, plan update, view toolkit. No new intake fields.</td>
+        <td>Triggers continuation or update prompts (buttons)</td>
+        <td>return, checkin, first-plan</td>
+      </tr>
+      <tr data-journey="first-plan flagged all">
+        <td>05</td>
+        <td>Situation selection</td>
+        <td class="mono">/start</td>
+        <td>Multi-select situation checkboxes; optional 280-char text per selection (screened). Hidden if flagged.</td>
+        <td>Screening → Master (after 06–07)</td>
+        <td>first-plan, flagged</td>
+      </tr>
+      <tr data-journey="first-plan all">
+        <td>06</td>
+        <td>Intake flow</td>
+        <td class="mono">/intake</td>
+        <td>Per task: name (dropdown), due date, deadline type. Structured only.</td>
+        <td>Feeds master</td>
+        <td>first-plan</td>
+      </tr>
+      <tr data-journey="first-plan all">
+        <td>07</td>
+        <td>Clarifying questions</td>
+        <td class="mono">/clarify</td>
+        <td>Available time; started status; difficulty; deadline changes since entry. No free text (v5).</td>
+        <td>Feeds master</td>
+        <td>first-plan</td>
+      </tr>
+      <tr data-journey="first-plan crisis all">
+        <td>08</td>
+        <td>Plan delivery</td>
+        <td class="mono">/plan</td>
+        <td>Displays model output: acknowledgment, full-scope plan, seven-day steps; include/exclude/ask me later per resource; optional share plan.</td>
+        <td>Master output rendered here</td>
+        <td>first-plan, crisis</td>
+      </tr>
+      <tr data-journey="return checkin all">
+        <td>09</td>
+        <td>Toolkit view</td>
+        <td class="mono">/toolkit</td>
+        <td>Resource cards, open-link clicks (analytics). Not LLM input.</td>
+        <td>None</td>
+        <td>return, checkin</td>
+      </tr>
+      <tr data-journey="checkin all return">
+        <td>10</td>
+        <td>Check-in response</td>
+        <td class="mono">/checkin?token=…</td>
+        <td>Per task: yes / in progress / no / attempted but could not complete; optional contact counselor; conditional 140-char barrier text (screened).</td>
+        <td>Screening if text → feeds replan</td>
+        <td>checkin, return</td>
+      </tr>
+      <tr data-journey="checkin return all">
+        <td>11</td>
+        <td>Progress summary</td>
+        <td class="mono">/progress</td>
+        <td>Summary from check-ins; confidence radio (metrics, not plan prompt). Button to update plan.</td>
+        <td>None (display)</td>
+        <td>checkin, return</td>
+      </tr>
+      <tr data-journey="crisis all first-plan checkin return">
+        <td>12</td>
+        <td>Crisis resources</td>
+        <td class="mono">/support</td>
+        <td>No plan. 988, Crisis Text Line, trusted contact notify (confirmed). Triggered by screening tier or behavioral patterns.</td>
+        <td>UI response to screening / behavior (no plan prompt)</td>
+        <td>crisis, all paths</td>
+      </tr>
+      <tr data-journey="return all">
+        <td>13</td>
+        <td>Plan update</td>
+        <td class="mono">/update</td>
+        <td>Change-state checkboxes (≥1); optional 280-char text (screened). Prior plan loaded from DB.</td>
+        <td>Screening → Plan update</td>
+        <td>return</td>
+      </tr>
+      <tr data-journey="flagged first-plan all">
+        <td>14</td>
+        <td>Flagged user state (example)</td>
+        <td class="mono">/start</td>
+        <td>Same as 05 without free text fields. Demonstrates account state, not a separate happy-path screen.</td>
+        <td>Master / update / replan without free text</td>
+        <td>flagged</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="counselor">Counselor screens (15–17)</h2>
+  <p class="section-note">Capstone prototype uses fabricated aggregate data. Student plan library remains system prompt in v1.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Screen</th>
+        <th>Route</th>
+        <th>Fields / data</th>
+        <th>AI</th>
+        <th>Journeys</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-journey="counselor all">
+        <td>15</td>
+        <td>Counselor dashboard</td>
+        <td class="mono">/counselor/dashboard</td>
+        <td>Aggregate sessions, categories, resource engagement, contact request count; grade filter. Pattern observation (demo copy in wireframe; LLM post-v1).</td>
+        <td>Post-v1 aggregate LLM</td>
+        <td>counselor</td>
+      </tr>
+      <tr data-journey="counselor all">
+        <td>16</td>
+        <td>Resource configuration</td>
+        <td class="mono">/counselor/resources</td>
+        <td>School-specific resources by category; AI suggest add resource (prototype). Static demo in v1 for student-facing generation.</td>
+        <td>Suggestions (prototype)</td>
+        <td>counselor</td>
+      </tr>
+      <tr data-journey="counselor all return checkin">
+        <td>17</td>
+        <td>Contact request notification</td>
+        <td class="mono">/counselor/notifications</td>
+        <td>Student name, timestamp, support flag. Session content not shared.</td>
+        <td>None</td>
+        <td>counselor, checkin</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="paths">Common paths (screen order)</h2>
+
+  <h3>New student → first plan</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">01 → 02 → 03 → 05 → 06 → 07 → [screening] → 08 → (09 toolkit as needed)</p>
+
+  <h3>Return → next step only</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">01 or 04 → continuation prompt → updated focus on 04 / 08</p>
+
+  <h3>Return → plan update</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">04 → 13 → [screening if text] → 08</p>
+
+  <h3>Check-in → replan</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Email link → 10 → 11 → (login) 04 or replan session → adaptive replan → 08</p>
+
+  <h3>Crisis / elevated</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Can interrupt after 05, 07, 10, or 13 screening → 12. Plan may exist but delivery gated.</p>
+
+  <p class="page-footer">
+    Chunk 4 complete. Next: <a href="screening.html">Screening</a> (chunk 5).
+    <a href="index.html">← Journeys hub</a>
+  </p>
+</main>
+
+<script src="wireframe-filter.js"></script>
+</body>
+</html>

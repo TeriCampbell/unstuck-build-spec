@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Prompts &amp; output</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .toc { margin: 16px 0 28px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; }
+    .toc ul { margin: 8px 0 0 1.2rem; }
+    .toc li { margin-bottom: 6px; }
+    .section-note { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; max-width: 760px; }
+    .flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin: 16px 0 24px;
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+    .flow .step { margin-bottom: 10px; padding-left: 12px; border-left: 3px solid var(--border); }
+    .flow .step.active { border-left-color: var(--accent); }
+    .flow .model-tag { font-family: "Courier New", monospace; font-size: 0.72rem; color: var(--muted); }
+    pre.schema {
+      background: var(--text);
+      color: #e8e4dc;
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin: 14px 0 20px;
+      font-family: "Courier New", monospace;
+    }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-family: "Courier New", monospace; background: var(--bg); border: 1px solid var(--border); }
+    .pill-sonnet { border-color: var(--accent); color: var(--accent); }
+    .pill-light { border-color: var(--amber); color: var(--amber); }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · prompts &amp; output · wireframe v5</div>
+  </div>
+  <div class="meta">Internal reference</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html" class="active">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>Prompts and output</h1>
+  <p class="lead">
+    When each API prompt runs, which model tier applies, and what structured output the UI expects.
+    Field-level detail: <a href="fields.html">Fields</a>. Tier behavior: <a href="screening.html">Screening</a>.
+  </p>
+
+  <nav class="toc" aria-label="On this page">
+    <strong>On this page</strong>
+    <ul>
+      <li><a href="#architecture">Prompt architecture</a></li>
+      <li><a href="#invocation">Invocation rules (cost and caching)</a></li>
+      <li><a href="#catalog">Prompt catalog</a></li>
+      <li><a href="#screening-prompt">1. Distress screening</a></li>
+      <li><a href="#master">2. Master prompt</a></li>
+      <li><a href="#replan">3. Adaptive replanning</a></li>
+      <li><a href="#continuation">4. Plan continuation</a></li>
+      <li><a href="#update">5. Plan update</a></li>
+      <li><a href="#output">Output format (JSON)</a></li>
+      <li><a href="#build">Build artifacts</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="architecture">Prompt architecture</h2>
+  <p class="section-note">
+    The product is not a chat thread. Each call is a single generation (or a single classification).
+    Optional free text is screened before plan prompts run.
+  </p>
+
+  <div class="flow" role="img" aria-label="Prompt flow diagram">
+    <div class="step"><strong>Student submits screen</strong> (structured fields ± optional text)</div>
+    <div class="step"><strong>Any free text in session?</strong> → Yes: <span class="pill pill-light">Lighter Claude</span> distress screening (batched, one call per session)<br>
+      → Tier: standard | elevated | crisis | inappropriate</div>
+    <div class="step"><strong>Inappropriate tier?</strong> → Stop. No plan prompt. Free text disabled for account.</div>
+    <div class="step"><strong>Which journey?</strong>
+      <br>· First plan after intake → <span class="pill pill-sonnet">Sonnet</span> master prompt
+      <br>· Dashboard “next step” → <span class="pill pill-sonnet">Sonnet</span> plan continuation
+      <br>· Dashboard “plan update” → screening if text → <span class="pill pill-sonnet">Sonnet</span> plan update
+      <br>· After check-in failures → screening if text → <span class="pill pill-sonnet">Sonnet</span> adaptive replanning
+    </div>
+    <div class="step active"><strong>UI layer</strong> applies tier rules (elevated/crisis may gate plan delivery), renders JSON, include/exclude/defer controls</div>
+  </div>
+
+  <h2 id="invocation">Invocation rules (cost and caching)</h2>
+  <table>
+    <thead>
+      <tr><th>Rule</th><th>Behavior</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Batched screening</td>
+        <td>All free text submitted in one session → one screening API call, not one per field</td>
+      </tr>
+      <tr>
+        <td>Plan caching</td>
+        <td>If student inputs unchanged → serve stored plan from database; no new Sonnet call</td>
+      </tr>
+      <tr>
+        <td>Weekly regeneration cap</td>
+        <td>Full plan regeneration (master-level rebuild) limited to once per week per account. Check-ins, viewing plan, toolkit, browsing resources: unlimited</td>
+      </tr>
+      <tr>
+        <td>Continuation vs. full regen</td>
+        <td>“What is my next step” uses continuation prompt (narrow output), not a full plan regen</td>
+      </tr>
+      <tr>
+        <td>Model tier</td>
+        <td>Lighter model: screening only. Sonnet: all plan generation and replanning</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="catalog">Prompt catalog</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Prompt</th>
+        <th>Model</th>
+        <th>When it fires</th>
+        <th>Output</th>
+        <th>Inputs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="#screening-prompt">Distress screening</a></td>
+        <td>Lighter Claude</td>
+        <td>Any session with free text submitted</td>
+        <td>Tier label only</td>
+        <td><a href="fields.html#screening">Screening fields</a></td>
+      </tr>
+      <tr>
+        <td><a href="#master">Master</a></td>
+        <td>Sonnet</td>
+        <td>First plan after intake (screens 05–07)</td>
+        <td>Acknowledgment + full scope JSON + seven-day steps</td>
+        <td><a href="fields.html#master">Master fields</a></td>
+      </tr>
+      <tr>
+        <td><a href="#replan">Adaptive replanning</a></td>
+        <td>Sonnet</td>
+        <td>Return after check-in with incomplete / attempted-not-complete tasks</td>
+        <td>Full scope + seven-day (regenerated)</td>
+        <td><a href="fields.html#replan">Replan fields</a></td>
+      </tr>
+      <tr>
+        <td><a href="#continuation">Plan continuation</a></td>
+        <td>Sonnet</td>
+        <td>Dashboard: “I am on track, what is my next step”</td>
+        <td>Single next action only</td>
+        <td><a href="fields.html#continuation">Continuation fields</a></td>
+      </tr>
+      <tr>
+        <td><a href="#update">Plan update</a></td>
+        <td>Sonnet</td>
+        <td>Dashboard: “Something has changed…” → screen 13</td>
+        <td>Full scope + seven-day (regenerated)</td>
+        <td><a href="fields.html#update">Update fields</a></td>
+      </tr>
+      <tr>
+        <td>Counselor pattern observation</td>
+        <td>Sonnet (planned)</td>
+        <td>Scheduled job on aggregate data</td>
+        <td>Plain language cohort observations</td>
+        <td>Post-v1 — not in capstone prototype</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="screening-prompt">1. Distress screening prompt</h2>
+  <p class="section-note">Safety-critical. Must be tested before free text is enabled in production builds. UI owns student-facing copy for each tier.</p>
+  <table>
+    <thead><tr><th>Attribute</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>Purpose</td><td>Classify free text; do not generate a plan</td></tr>
+      <tr><td>Output</td><td>One of: standard, elevated_concern, crisis, inappropriate</td></tr>
+      <tr><td>Master prompt</td><td>Blocked entirely if inappropriate. Elevated/crisis: plan may generate but UI gates delivery (<a href="screening.html">Screening</a>)</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="master">2. Master prompt</h2>
+  <p class="section-note">Defines tone and output standards for the whole system. All other plan prompts must stay consistent with it.</p>
+  <h3>Behavior rules (summary)</h3>
+  <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li>Generate a plan; do not ask follow-up questions</li>
+    <li>Specific actions only (“Open Khan Academy…”), not vague (“study for the SAT”)</li>
+    <li>One resource per step max; URLs only from allowlisted library</li>
+    <li>No college essay content, writing evaluation, or admissions advice</li>
+    <li>No time-of-day language (“tonight”, “this morning”)</li>
+    <li>Acknowledgment: 1–3 sentences, no plan content inside it</li>
+    <li>Flagged users: complete plan from structured inputs only</li>
+  </ul>
+  <p class="section-note">Includes few-shot example in system prompt (see PRD Initial Prompt Design). Resource library maintained in system prompt for v1.</p>
+
+  <h2 id="replan">3. Adaptive replanning prompt</h2>
+  <p class="section-note">Same output shape as master. Recalculates from current state without judgment when check-ins show missed or stalled tasks.</p>
+
+  <h2 id="continuation">4. Plan continuation prompt</h2>
+  <p class="section-note">Intentionally narrow: one next action based on current plan + check-in history + elapsed time. Does not replace full plan or count as weekly full regeneration.</p>
+
+  <h2 id="update">5. Plan update prompt</h2>
+  <p class="section-note">Receives prior plan, check-ins, and change-state pre-selects (± optional 280-char text). Student does not re-enter intake data already on file.</p>
+
+  <h2 id="output">Output format (JSON)</h2>
+  <p class="section-note">
+    Sonnet returns structured data the UI parses. Wording below is the logical schema for the build; field names may adjust in implementation.
+  </p>
+
+  <h3>Master, replan, and plan update</h3>
+  <pre class="schema">{
+  "acknowledgment": "string (1-3 sentences, student-specific)",
+  "full_scope_plan": {
+    "tasks": [
+      {
+        "task_id": "string",
+        "title": "string (from intake)",
+        "due_date": "ISO date",
+        "deadline_type": "hard_cutoff | teacher_assigned | self_imposed",
+        "steps": [
+          {
+            "action": "string (specific action)",
+            "resource": {
+              "name": "string (from library only)",
+              "why": "string (one sentence)",
+              "url": "string (exact match library)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "seven_day_steps": [
+    {
+      "order": 1,
+      "action": "string",
+      "resource": { "name", "why", "url" }
+    }
+  ]
+}</pre>
+  <p class="section-note">
+    UI renders full_scope_plan with monthly / weekly / daily toggles. Resource include, exclude, and ask me later are UI controls, not model-generated button text.
+  </p>
+
+  <h3>Plan continuation</h3>
+  <pre class="schema">{
+  "next_action": "string (single concrete step)",
+  "context_line": "string (optional one sentence tying to plan)"
+}</pre>
+
+  <h3>Distress screening</h3>
+  <pre class="schema">{
+  "tier": "standard | elevated_concern | crisis | inappropriate"
+}</pre>
+
+  <h3>Validation (application layer)</h3>
+  <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
+    <li>JSON schema parse; retry or fail gracefully on malformed response</li>
+    <li>Every URL in output must exist in allowlisted library</li>
+    <li>Block plan display if tier is inappropriate</li>
+  </ul>
+
+  <h2 id="build">Build artifacts</h2>
+  <p class="section-note">
+    Full system prompt text, resource library entries, and versioned prompt changelog are created during prototype build in Cursor (not duplicated here).
+    Prompt iteration table: version, date, change, eval cases affected — to live alongside code in the repo.
+  </p>
+  <table>
+    <thead><tr><th>Artifact</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Screening prompt (production text)</td><td>To be written in build</td></tr>
+      <tr><td>Master prompt + few-shot example</td><td>Spec in PRD; production text in build</td></tr>
+      <tr><td>Replan / continuation / update prompts</td><td>To be written in build</td></tr>
+      <tr><td>Resource library JSON block</td><td>To be embedded in system prompt</td></tr>
+    </tbody>
+  </table>
+
+  <p class="page-footer">
+    Chunk 3 complete. Next: <a href="wireframe.html">Wireframe map</a> (chunk 4).
+    <a href="index.html">← Journeys hub</a>
+  </p>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Build specification (hub)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · wireframe v5 · May 2026</div>
+  </div>
+  <div class="meta">Internal reference · not the submitted PRD</div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html" class="active">Journeys (hub)</a>
+  <a href="fields.html">Fields</a>
+  <a href="prompts.html">Prompts &amp; output</a>
+  <a href="wireframe.html">Wireframe map</a>
+  <a href="workflows.html">Workflows</a>
+  <a href="screening.html">Screening</a>
+  <a href="eval.html">Evaluation</a>
+</nav>
+
+<main class="main">
+  <h1>User journeys</h1>
+  <p class="lead">
+    Filter by journey to see screens in order, what data is collected, and which AI step runs.
+    Open <a href="fields.html">Fields</a> for full required/optional tables, or other pages for depth.
+  </p>
+
+  <div class="notice">
+    <strong>How to use:</strong> Double-click this file (<code>index.html</code>) to open in a browser.
+    One entry point; other pages are linked from the nav bar.
+    <br><br>
+    <strong>Interactive wireframe:</strong>
+    <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Open wireframe v5 (17 screens) →</a>
+    · <a href="wireframe.html">Screen map</a> (this site)
+  </div>
+
+  <h2>Filter by journey</h2>
+  <div class="filter-bar">
+    <button type="button" data-filter="all" class="active">All journeys</button>
+    <button type="button" data-filter="first-plan">New student → first plan</button>
+    <button type="button" data-filter="return-next">Return → next step only</button>
+    <button type="button" data-filter="return-update">Return → plan update</button>
+    <button type="button" data-filter="checkin-replan">Check-in → replan</button>
+    <button type="button" data-filter="crisis">Crisis / elevated (gated)</button>
+    <button type="button" data-filter="flagged">Flagged account</button>
+    <button type="button" data-filter="counselor">Counselor (prototype)</button>
+  </div>
+
+  <!-- First plan -->
+  <article class="journey-card" data-journey="first-plan all">
+    <div class="journey-title">New student → first plan</div>
+    <div class="journey-id">journey: first-plan</div>
+    <span class="tag tag-green">Master prompt</span>
+    <span class="tag tag-amber">Distress screening</span>
+    <span class="tag tag-gray">Wireframe 02–08</span>
+    <ol class="step-list">
+      <li><strong>02</strong> Account creation, age gate, grade level captured</li>
+      <li><strong>03</strong> Trusted contact and permissions (not sent to plan prompt)</li>
+      <li><strong>05</strong> Situation checkboxes; optional free text per selection (280 chars), screened</li>
+      <li><strong>06</strong> Tasks: name, due date, deadline type (repeat per item)</li>
+      <li><strong>07</strong> Available time, started status, difficulty, deadline-change selector</li>
+      <li><strong>Screening</strong> Batched if any free text in session</li>
+      <li><strong>08</strong> Plan delivery — acknowledgment + full-scope plan + seven-day view (JSON)</li>
+    </ol>
+    <dl class="detail-grid">
+      <dt>AI prompt</dt>
+      <dd>Distress screening (lighter model) → Master prompt (Sonnet) if tier allows</dd>
+      <dt>Required inputs</dt>
+      <dd><a href="fields.html#master">See master prompt table</a></dd>
+      <dt>Optional inputs</dt>
+      <dd>Situation free text (280) — see <a href="fields.html#optional">optional fields</a></dd>
+      <dt>Workflow visual</dt>
+      <dd><a href="workflows-first-session.html">First session diagram</a></dd>
+    </dl>
+  </article>
+
+  <!-- Return next step -->
+  <article class="journey-card" data-journey="return-next all">
+    <div class="journey-title">Return student → next step only</div>
+    <div class="journey-id">journey: return-next</div>
+    <span class="tag tag-green">Plan continuation</span>
+    <span class="tag tag-gray">Wireframe 04</span>
+    <ol class="step-list">
+      <li><strong>04</strong> Dashboard — student selects &ldquo;I am on track, what is my next step&rdquo;</li>
+      <li>Model receives current plan + check-in history + current date</li>
+      <li>Single next action returned (not full plan regeneration)</li>
+    </ol>
+    <dl class="detail-grid">
+      <dt>AI prompt</dt>
+      <dd>Plan continuation (Sonnet)</dd>
+      <dt>Required inputs</dt>
+      <dd><a href="fields.html#continuation">Continuation table</a></dd>
+    </dl>
+  </article>
+
+  <!-- Plan update -->
+  <article class="journey-card" data-journey="return-update all">
+    <div class="journey-title">Return student → plan update</div>
+    <div class="journey-id">journey: return-update</div>
+    <span class="tag tag-green">Plan update prompt</span>
+    <span class="tag tag-amber">Distress screening</span>
+    <span class="tag tag-gray">Wireframe 04, 13</span>
+    <ol class="step-list">
+      <li><strong>04</strong> Dashboard — &ldquo;Something has changed, I need to update my plan&rdquo;</li>
+      <li><strong>13</strong> Change-state checkboxes (at least one required); optional free text 280 chars, screened</li>
+      <li>Model receives prior plan + check-in history + change inputs; regenerates full scope + seven-day view</li>
+    </ol>
+    <dl class="detail-grid">
+      <dt>AI prompt</dt>
+      <dd>Screening if free text → Plan update (Sonnet)</dd>
+      <dt>Required inputs</dt>
+      <dd><a href="fields.html#update">Plan update table</a></dd>
+    </dl>
+  </article>
+
+  <!-- Check-in replan -->
+  <article class="journey-card" data-journey="checkin-replan all">
+    <div class="journey-title">Check-in → replan</div>
+    <div class="journey-id">journey: checkin-replan</div>
+    <span class="tag tag-green">Adaptive replanning</span>
+    <span class="tag tag-amber">Distress screening</span>
+    <span class="tag tag-gray">Wireframe 10, 11</span>
+    <ol class="step-list">
+      <li>Email tokenized link → <strong>10</strong> Check-in per task: yes / no / in progress / attempted but could not complete / contact counselor</li>
+      <li>Optional 140-char &ldquo;what got in the way?&rdquo; if attempted but could not complete — screened</li>
+      <li><strong>11</strong> Progress summary from check-in data</li>
+      <li>On return session or failed tasks: adaptive replanning prompt with prior plan + history</li>
+    </ol>
+    <dl class="detail-grid">
+      <dt>AI prompt</dt>
+      <dd>Screening on optional check-in text → Adaptive replanning (Sonnet)</dd>
+      <dt>Required inputs</dt>
+      <dd><a href="fields.html#replan">Replan table</a></dd>
+      <dt>Workflow visual</dt>
+      <dd><a href="workflows-checkin-replan.html">Check-in &amp; replan diagram</a></dd>
+    </dl>
+  </article>
+
+  <!-- Crisis / elevated -->
+  <article class="journey-card" data-journey="crisis all first-plan return-update checkin-replan">
+    <div class="journey-title">Crisis or elevated concern (gated delivery)</div>
+    <div class="journey-id">journey: crisis</div>
+    <span class="tag tag-amber">Screening only</span>
+    <span class="tag tag-gray">Wireframe 12</span>
+    <ol class="step-list">
+      <li>Can occur on any journey that includes free text screening</li>
+      <li><strong>Elevated:</strong> support resources before plan; plan generated but not immediately pushed</li>
+      <li><strong>Crisis:</strong> crisis resources (e.g. 988); app stays open; plan not immediately pushed</li>
+      <li><strong>12</strong> Crisis resources screen when UI surfaces support</li>
+      <li>Behavioral pattern detection (structured check-ins only) may also surface support — see <a href="screening.html">Screening</a></li>
+    </ol>
+  </article>
+
+  <!-- Flagged -->
+  <article class="journey-card" data-journey="flagged all first-plan return-update checkin-replan">
+    <div class="journey-title">Flagged account (structured inputs only)</div>
+    <div class="journey-id">journey: flagged</div>
+    <span class="tag tag-green">Master / replan / update</span>
+    <span class="tag tag-gray">Wireframe 14</span>
+    <ol class="step-list">
+      <li>After inappropriate or threatening tier: free text hidden on all screens; no placeholder</li>
+      <li>Same journeys as above but payloads exclude free text; model must still produce complete plans</li>
+      <li><strong>14</strong> Demonstrates situation screen without free text fields</li>
+    </ol>
+    <dl class="detail-grid">
+      <dt>Detail</dt>
+      <dd><a href="screening.html#flagged">Flagged user behavior</a></dd>
+    </dl>
+  </article>
+
+  <!-- Counselor -->
+  <article class="journey-card" data-journey="counselor all">
+    <div class="journey-title">Counselor (capstone prototype)</div>
+    <div class="journey-id">journey: counselor</div>
+    <span class="tag tag-gray">Screens 15–17</span>
+    <span class="tag tag-gray">Fabricated aggregate data in v1</span>
+    <ol class="step-list">
+      <li><strong>15</strong> Counselor dashboard — anonymized aggregates (demo data)</li>
+      <li><strong>16</strong> Resource configuration (static demo in v1)</li>
+      <li><strong>17</strong> Student contact-request notification (name + flag only)</li>
+      <li>Student plan generation uses system-prompt resource library, not live counselor config in v1</li>
+      <li>Pattern-observation LLM on aggregates is post-v1</li>
+    </ol>
+    <dl class="detail-grid">
+      <dt>Workflow</dt>
+      <dd><a href="workflows.html">All workflows (integrated + student journeys)</a></dd>
+    </dl>
+  </article>
+
+  <p class="page-footer">Build spec complete (chunks 1–6). <a href="eval.html">Evaluation</a> · <a href="workflows.html">Workflows</a></p>
+</main>
+
+<script src="filter.js"></script>
+</body>
+</html>
