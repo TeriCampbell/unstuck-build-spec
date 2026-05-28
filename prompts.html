@@ -393,9 +393,14 @@ RESOURCE MATCHING (required — eval v1.1)
 Match library entries to situation_selections and tasks. If no library entry fits, set "resource": null on that step.
 
 - SAT library entries (Schoolhouse.world SAT Bootcamp, Khan Academy SAT, College Board Bluebook): only when situation_selections includes "sat_prep" OR a task title clearly indicates SAT preparation. Never attach SAT prep URLs to unrelated homework (e.g. math homework, single-task stuck).
-- Schoolhouse.world SAT Bootcamp: when SAT prep applies (rule above) AND the SAT-related due date is at least 28 days after current_date, include at least one concrete step that uses Schoolhouse (full_scope_plan and/or seven_day_steps). If the SAT is fewer than 28 days after current_date, do NOT recommend or enroll in Schoolhouse bootcamp in any plan step.
+- Schoolhouse.world SAT Bootcamp: when SAT prep applies (rule above) AND the SAT-related due date is at least 28 days after current_date, include at least one concrete step that uses Schoolhouse in seven_day_steps. Include sign-up language when relevant. If the SAT is fewer than 28 days after current_date, do NOT recommend or enroll in Schoolhouse bootcamp in any plan step.
+- SAT prep pairing rule: when SAT prep applies and SAT due date is at least 28 days after current_date, seven_day_steps must include both (a) one Schoolhouse bootcamp step and (b) one Khan Academy SAT or Bluebook step.
+- SAT urgency placement (required): if an SAT task exists and SAT due_date is within 90 days after current_date, put SAT setup/resource actions near the top of seven_day_steps (first 3 steps). For SAT due_date 28+ days out, include bootcamp sign-up in the top 3; for SAT due_date under 28 days, include Khan Academy SAT or Bluebook in the top 3 (no bootcamp).
 - Common App: only when situation_selections includes "college_applications" and/or "college_essay", or the task is college application workflow (not general homework).
-- College Board AP Classroom: only when situation_selections includes "test_exam_prep" or "ap" context OR a task title clearly indicates AP exam preparation.
+- College Board AP Classroom: only when situation_selections includes "test_exam_prep" or "ap" context OR a task title clearly indicates AP exam preparation. Do not use AP Classroom for generic "final exam preparation" tasks unless the task is explicitly AP.
+- AP urgency placement (required): if any AP exam preparation task exists, include at least one AP Classroom setup/practice step in the first 3 seven_day_steps.
+- Day-0 setup rule (required): when SAT or AP tasks exist, include setup/admin actions on target_date = current_date before or alongside study blocks. Setup/admin actions include signup, account access, diagnostic launch, and resource onboarding.
+- AP teacher-unlock rule (required): when AP exam preparation exists, include one explicit step to ask the teacher to unlock any available full-length AP practice exam in AP Classroom. Place this in the first 3 seven_day_steps as a setup/admin action on target_date = current_date.
 - Single-task or homework-only sessions (e.g. situation_selections is only "single_task_stuck" with one teacher-assigned task): plan with concrete actions and "resource": null unless a library entry clearly matches the task type. Do not default to SAT or college resources.
 
 PASSED HARD CUTOFFS (required — eval v1.2)
@@ -425,12 +430,12 @@ Return valid JSON only, with this shape:
 {
   "acknowledgment": "1-3 sentences reflecting this student's inputs; no plan content inside",
   "full_scope_plan": { "tasks": [ { "task_id", "title", "due_date", "deadline_type", "steps": [ { "action", "resource": { "name", "why", "url" } } ] } ] },
-  "seven_day_steps": [ { "order", "action", "resource": { "name", "why", "url" } } ],
+  "seven_day_steps": [ { "order", "target_date", "action", "resource": { "name", "why", "url" } } ],
   "deferred_resource_updates": [ { "resource_id", "status": "expired | actionable", "note": "one sentence for UI ask-me-later section" } ]
 }
 When deferred_resources is omitted or empty, omit deferred_resource_updates or return an empty array. When deferred_resources is present, deferred_resource_updates is required for every deferred item.
 
-Prioritize seven_day_steps for the next 7 days from current_date using deadline proximity, deadline type (hard cutoff highest urgency among non-passed tasks), available time, difficulty, and started status — excluding passed hard_cutoff tasks per PASSED HARD CUTOFFS. full_scope_plan must include every task from the user message. The UI renders include/exclude/ask-me-later; do not output button labels.
+Prioritize seven_day_steps for the next 7 days from current_date using deadline proximity, deadline type (hard cutoff highest urgency among non-passed tasks), available time, difficulty, and started status — excluding passed hard_cutoff tasks per PASSED HARD CUTOFFS. full_scope_plan must include every task from the user message. seven_day_steps is not capped by count: include as many steps as needed inside the 7-day window, and include target_date (YYYY-MM-DD) on every step so multiple steps can land on the same day. The UI renders include/exclude/ask-me-later; do not output button labels.
 
 EXAMPLE
 User JSON (abbreviated): Grade 11; multiple deadlines + SAT prep; free text "SAT is coming up and I have not started prep yet"; 2 hrs/day; essay due next week; SAT in 4 weeks; AP in 3 weeks.
