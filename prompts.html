@@ -248,6 +248,12 @@
         <td>Expired Schoolhouse in ask-me-later must not re-surface as enrollable</td>
       </tr>
       <tr>
+        <td>master v1.3 + code (May 2026)</td>
+        <td><code>lib/enforcePlanRules.mjs</code> — SAT &lt;28 / ≥28, day-0 bootcamp, Khan pairing; prompt sequencing lines added (still v1.3 tag)</td>
+        <td>Production smoke</td>
+        <td>Model chained bootcamp after AP and surfaced Schoolhouse at 27 days despite prompt rules</td>
+      </tr>
+      <tr>
         <td>plan-update v1.0 → v1.1</td>
         <td>RESOURCE MATCHING aligned to master v1.1</td>
         <td>T4</td>
@@ -374,8 +380,8 @@ Expected seven_day_steps (illustrative): (1) Open essay draft or blank doc and w
   <div class="version-card final" id="master-final">
     <p class="version-label">Master — final prompt (v1.3, production)</p>
     <h3>What we changed and why</h3>
-    <p class="learned"><strong>v1.1 RESOURCE MATCHING:</strong> explicit gates so resources match checkboxes/tasks. <strong>v1.2 PASSED HARD CUTOFFS:</strong> compare <code>due_date</code> to <code>current_date</code>; 7-day excludes passed hard-cutoff work. <strong>v1.3 DEFERRED RESOURCES:</strong> <code>deferred_resource_updates</code> for ask-me-later expiry (Schoolhouse when SAT &lt;28 days).</p>
-    <p class="section-note">Canonical file: <code>unstuck-app/prompts/master-prompt-v1.txt</code> (eval tag: <code>master-prompt-v1.3</code>)</p>
+    <p class="learned"><strong>v1.1 RESOURCE MATCHING:</strong> explicit gates so resources match checkboxes/tasks. <strong>v1.2 PASSED HARD CUTOFFS:</strong> compare <code>due_date</code> to <code>current_date</code>; 7-day excludes passed hard-cutoff work. <strong>v1.3 DEFERRED RESOURCES:</strong> <code>deferred_resource_updates</code> for ask-me-later expiry (Schoolhouse when SAT &lt;28 days). <strong>May 2026 enforcement:</strong> <code>lib/enforcePlanRules.mjs</code> applies day-0 bootcamp sign-up, Khan pairing when SAT ≥28 days, and strips Schoolhouse when &lt;28 days — see <a href="eval.html#enforcement">eval.html</a>.</p>
+    <p class="section-note">Canonical file: <code>unstuck-app/prompts/master-prompt-v1.txt</code> (eval tag: <code>master-prompt-v1.3</code>). Post-parse enforcement: <code>unstuck-app/lib/enforcePlanRules.mjs</code>.</p>
     <pre class="schema">You are Unstuck, a calm, direct, non-judgmental planning guide for high school students. You generate a structured plan in one response. You do not chat, motivate, lecture, or ask follow-up questions. Do not use filler ("Great job," "You've got this") or imply the student should have started sooner. Do not reference time of day ("tonight," "this morning"). Use "your next step," "what is ahead," and "when you are ready."
 
 INPUT
@@ -400,6 +406,8 @@ Match library entries to situation_selections and tasks. If no library entry fit
 - College Board AP Classroom: only when situation_selections includes "test_exam_prep" or "ap" context OR a task title clearly indicates AP exam preparation. Do not use AP Classroom for generic "final exam preparation" tasks unless the task is explicitly AP.
 - AP urgency placement (required): if any AP exam preparation task exists, include at least one AP Classroom setup/practice step in the first 3 seven_day_steps.
 - Day-0 setup rule (required): when SAT or AP tasks exist, include setup/admin actions on target_date = current_date before or alongside study blocks. Setup/admin actions include signup, account access, diagnostic launch, and resource onboarding.
+- Schoolhouse sign-up sequencing (required): bootcamp enrollment is a standalone day-0 setup action on target_date = current_date in the first 3 seven_day_steps. Never defer bootcamp sign-up behind completing AP coursework, homework, or study blocks. Never write "After [task] is complete, sign up for bootcamp."
+- Days until SAT: count calendar days from current_date to the SAT task due_date. If fewer than 28 days, Schoolhouse is expired — use Khan Academy SAT or Bluebook on day 0 instead (no bootcamp in any step).
 - AP teacher-unlock rule (required): when AP exam preparation exists, include one explicit step to ask the teacher to unlock any available full-length AP practice exam in AP Classroom. Place this in the first 3 seven_day_steps as a setup/admin action on target_date = current_date.
 - Single-task or homework-only sessions (e.g. situation_selections is only "single_task_stuck" with one teacher-assigned task): plan with concrete actions and "resource": null unless a library entry clearly matches the task type. Do not default to SAT or college resources.
 
@@ -465,6 +473,7 @@ Expected seven_day_steps (illustrative): (1) Open essay draft or blank doc and w
     <li>Inputs: prior plan, check-in history, change-state pre-selects, optional screened 280-char text (<a href="fields.html#update">fields</a>)</li>
     <li>Regenerate full scope + seven-day view; preserve completed work per plan update integrity criterion</li>
     <li><strong>Gap:</strong> plan-update does not yet include master v1.2/v1.3 passed-cutoff or deferred-resource rules — align before replan evals</li>
+    <li><strong>Gap:</strong> plan-update does not call <code>enforcePlanRules</code> — replan path should match intake enforcement</li>
   </ul>
 
   <div class="version-card initial" id="plan-update-initial">
