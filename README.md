@@ -14,7 +14,11 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 
 1. Change files in this folder (`Desktop/AI PM Capstone/unstuck-spec/`).
 2. Upload changed files to [unstuck-build-spec on GitHub](https://github.com/TeriCampbell/unstuck-build-spec) (browser upload works).
-3. Wait 1–3 minutes; refresh the live URL.
+3. Wait 1–3 minutes; hard-refresh the live URL.
+
+**May 2026 spec sync:** `prompts.html` — prompt evolution + finals (`#evolution`); **on GitHub**. `eval.html` — manual/automated **results** (`#manual`, `#automated`); **upload to GitHub** when ready so PRD links match.
+
+**May 28, 2026 (local — push to GitHub):** `eval.html` — `#enforcement`, `#production`, SAT resource criteria; `prompts.html` — evolution row for `enforcePlanRules`, master-final sequencing lines. Matches `unstuck-app` commit `925a037`.
 
 Or double-click `index.html` to preview without publishing.
 
@@ -24,7 +28,7 @@ Or double-click `index.html` to preview without publishing.
 |------|---------|
 | `index.html` | Journey hub |
 | `fields.html` | Required / optional inputs |
-| `prompts.html` | Prompt architecture and JSON shapes |
+| `prompts.html` | Prompt architecture, JSON shapes, **production v1 text** (`#production-prompts`) |
 | `wireframe.html` | Screen map (links to live wireframe) |
 | `workflows.html` | Integrated workflow PNG |
 | `workflows-first-session.html` | First session diagram |
@@ -43,3 +47,4 @@ Copy also lives in `TeriCampbell/maven-capstone` at `docs/unstuck/build-spec/` (
 ## Maintainer
 
 Teri Campbell · Product Faculty AI PM Capstone (Cohort 9) · Builder track
+
