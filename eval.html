@@ -352,19 +352,19 @@
   <p style="font-size:0.9rem;margin:0 0 16px;"><strong>Iterations during review:</strong> T2 → master v1.1; T1 Schoolhouse → v1.1; E3 → v1.2; E4 → v1.3; N1 → screening v1.1 (N2–N4 re-run after screening change). <strong>May 28–29, 2026 (prototype app, not fixture re-run):</strong> <code>enforcePlanRules</code>, <code>extract-tasks</code> + checkbox prefill, unique <code>session_id</code> per Generate — see <a href="#intake-prototype">intake</a>, <a href="#enforcement">enforcement</a>, <a href="#persistence">persistence</a>.</p>
 
   <h2 id="intake-prototype">Intake prototype — extract tasks and prefill (May 2026)</h2>
-  <p class="section-note">Live React intake (<code>/intake</code>), not the frozen T1–N6 fixture runner. Canonical code: <code>unstuck-app</code> commits <code>03d6e32</code>, <code>5e7afaf</code>.</p>
+  <p class="section-note">Live React intake (<code>/intake</code>), not the frozen T1–N6 fixture runner. Canonical code: <code>unstuck-app</code> <code>4cf2793</code>+ (pick-starter v1.2, count expansion); prior <code>9fd2948</code>, <code>925a037</code>.</p>
   <table>
     <thead><tr><th>Step</th><th>Behavior</th><th>Pass condition</th></tr></thead>
     <tbody>
       <tr>
         <td>Screen 05 — optional free text</td>
-        <td>POST <code>/api/extract-tasks</code> (Haiku, <code>prompts/extract-tasks-v1.txt</code>) on Continue when text present</td>
-        <td>Returns <code>tasks[]</code> + summary when text names deadlines/tests; no blocking error</td>
+        <td>POST <code>/api/extract-tasks</code> → Haiku <code>pick-starter-tasks-v1.2</code> + catalog guardrails on Continue when text present</td>
+        <td>Returns <code>tasks[]</code> + summary; explicit counts (e.g. 2 midterms) → multiple rows</td>
       </tr>
       <tr>
-        <td>Screen 05 — vague free text</td>
-        <td>LLM/regex return no tasks → <code>suggestTasksFromSituationSelections</code> from checkboxes</td>
-        <td>Screen 06 shows starter rows (SAT, college essay, AP, etc.) with placeholder dates — not one empty row</td>
+        <td>Screen 05 — checkboxes only</td>
+        <td>No API on Continue; screen 06 uses <code>suggestTasksFromSituationSelections</code></td>
+        <td>Starter rows match selections (SAT, college essay, etc.) — not one empty row</td>
       </tr>
       <tr>
         <td>Screen 06</td>
@@ -419,17 +419,15 @@
   <p class="section-note">Runner: <code>npm run eval -- {caseId}</code> in <code>unstuck-app</code>. Models: Haiku 4.5 (screening), Sonnet 4.6 (master / plan update). Final suite: JSON valid on all plan cases; N2–N4 tier checks PASS on every run; SAT rules enforced in code after parse.</p>
 
   <h2 id="production">Production smoke (live URL)</h2>
-  <p class="section-note">Confirm behavior on the deployed app, not only fixtures. Full log: <code>unstuck-app/EVALUATION.md</code> → Production smoke test. Vercel should deploy from <code>unstuck-app</code> <code>main</code> at <code>5e7afaf</code> or later.</p>
+  <p class="section-note">Confirm behavior on the deployed app, not only fixtures. Full log: <code>unstuck-app/EVALUATION.md</code> → Production smoke test. Vercel deploys from <code>unstuck-app</code> <code>main</code> (<code>4cf2793</code>+).</p>
   <table>
     <thead><tr><th>Date</th><th>Check</th><th>Result</th><th>App commit</th></tr></thead>
     <tbody>
       <tr><td>2026-05-26</td><td>T1, N2–N4 via <code>/demo</code></td><td><strong>Pass</strong></td><td>2a</td></tr>
-      <tr><td>2026-05-28</td><td>2c-db save via <code>/intake/plan</code> (single session row era)</td><td><strong>Pass</strong></td><td>3b6cabf</td></tr>
-      <tr><td>—</td><td>Screen 06 prefill from checkboxes (vague free text)</td><td><strong>Pending</strong></td><td><code>03d6e32</code></td></tr>
-      <tr><td>—</td><td>Unique <code>sessions</code> row per Generate (two generates → two ids)</td><td><strong>Pending</strong></td><td><code>5e7afaf</code></td></tr>
-      <tr><td>—</td><td>SAT &lt;28d: Khan today, no Schoolhouse</td><td><strong>Pending</strong></td><td><code>925a037</code></td></tr>
-      <tr><td>—</td><td>SAT ≥28d: bootcamp + Khan today in top 3</td><td><strong>Pending</strong></td><td><code>925a037</code></td></tr>
-      <tr><td>—</td><td>Full <code>/intake</code> path + “Session saved” on screen 08</td><td><strong>Pending</strong></td><td>5e7afaf+</td></tr>
+      <tr><td>2026-05-28</td><td>2c-db save via <code>/intake/plan</code></td><td><strong>Pass</strong></td><td>3b6cabf</td></tr>
+      <tr><td>2026-05-29</td><td>Screen 06 prefill A/B/C (checkbox, 2 midterms, biology test)</td><td><strong>Pass</strong></td><td><code>4cf2793</code></td></tr>
+      <tr><td>2026-05-29</td><td>SAT &lt;28d and ≥28d via <code>/intake/plan</code></td><td><strong>Pass</strong></td><td><code>925a037</code></td></tr>
+      <tr><td>2026-05-29</td><td>Full <code>/intake</code> → plan (~1 min; stretch-break copy on screen 08)</td><td><strong>Pass</strong></td><td>4cf2793+</td></tr>
     </tbody>
   </table>
   <p style="font-size:0.88rem;"><strong>URL:</strong> <a href="https://unstuck-app-flame.vercel.app/">unstuck-app-flame.vercel.app</a> · <strong>Pilot codes:</strong> PILOT-A, DEMO</p>
