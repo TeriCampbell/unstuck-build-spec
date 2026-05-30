@@ -207,7 +207,7 @@
   </table>
 
   <h2 id="counselor">Counselor screens (15–17)</h2>
-  <p class="section-note">Capstone prototype uses fabricated aggregate data. Student plan library remains system prompt in v1.</p>
+  <p class="section-note">Screen <strong>15</strong> is built (Phase 4): live SQL aggregates from Supabase via <code>POST /api/counselor-aggregates</code>. Demo school <code>DEMO</code>; seed with <code>npm run seed:demo</code> in unstuck-app. Screens <strong>16–17</strong> are wireframe-only in the capstone MVP. Student plan library remains system prompt in v1.</p>
   <table>
     <thead>
       <tr>
@@ -224,24 +224,27 @@
         <td>15</td>
         <td>Counselor dashboard</td>
         <td class="mono">/counselor/dashboard</td>
-        <td>Aggregate sessions, categories, resource engagement, contact request count; grade filter. Pattern observation (demo copy in wireframe; LLM post-v1).</td>
-        <td>Post-v1 aggregate LLM</td>
+        <td>
+          Filters: grade (all or 9–12), date range (From/To, inclusive), day of week. KPIs in range: students with a plan, new plan sessions, return plan sessions, resource engagement %, contact requests.
+          Sessions by category (session count + % of plan sessions in range). Resource engagement list. <strong>Patterns &amp; Actionable Insights</strong> (rule-based blurb from top categories/resources; no counselor LLM). Requires <code>visitor_id</code> on sessions; small-n suppression except capstone demo school.
+        </td>
+        <td>Rule-based insights only (no aggregate LLM)</td>
         <td>counselor</td>
       </tr>
       <tr data-journey="counselor all">
         <td>16</td>
         <td>Resource configuration</td>
         <td class="mono">/counselor/resources</td>
-        <td>School-specific resources by category; AI suggest add resource (prototype). Static demo in v1 for student-facing generation.</td>
-        <td>Suggestions (prototype)</td>
+        <td>Deferred — not in capstone app. Wireframe: school-specific resources by category; AI suggest add resource (prototype).</td>
+        <td>Deferred</td>
         <td>counselor</td>
       </tr>
       <tr data-journey="counselor all return checkin">
         <td>17</td>
         <td>Contact request notification</td>
         <td class="mono">/counselor/notifications</td>
-        <td>Student name, timestamp, support flag. Session content not shared.</td>
-        <td>None</td>
+        <td>Deferred — not in capstone app. Contact intent counted on screen 15 via <code>check_ins</code> (<code>counselor_contact</code>). Wireframe: student name, timestamp, support flag; session content not shared.</td>
+        <td>Deferred</td>
         <td>counselor, checkin</td>
       </tr>
     </tbody>

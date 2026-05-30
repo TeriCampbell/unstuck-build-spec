@@ -180,16 +180,20 @@
   <article class="journey-card" data-journey="counselor all">
     <div class="journey-title">Counselor (capstone prototype)</div>
     <div class="journey-id">journey: counselor</div>
-    <span class="tag tag-gray">Screens 15–17</span>
-    <span class="tag tag-gray">Fabricated aggregate data in v1</span>
+    <span class="tag tag-gray">Screen 15 shipped (Phase 4)</span>
+    <span class="tag tag-gray">Screens 16–17 deferred</span>
     <ol class="step-list">
-      <li><strong>15</strong> Counselor dashboard — anonymized aggregates (demo data)</li>
-      <li><strong>16</strong> Resource configuration (static demo in v1)</li>
-      <li><strong>17</strong> Student contact-request notification (name + flag only)</li>
+      <li><strong>15</strong> Counselor dashboard — live Supabase aggregates by school (<code>DEMO</code> pilot code); grade, date range, and day-of-week filters; KPI boxes; sessions by category; resource engagement; <strong>Patterns &amp; Actionable Insights</strong> (rule-based, no counselor LLM)</li>
+      <li><strong>16</strong> Resource configuration — not built in capstone MVP</li>
+      <li><strong>17</strong> Student contact-request notification — not built in capstone MVP (contact intent counted via <code>check_ins</code> on screen 15)</li>
       <li>Student plan generation uses system-prompt resource library, not live counselor config in v1</li>
-      <li>Pattern-observation LLM on aggregates is post-v1</li>
+      <li>Aggregate LLM narrative on counselor dashboard is post-v1</li>
     </ol>
     <dl class="detail-grid">
+      <dt>Live route</dt>
+      <dd><a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a> (also from app home)</dd>
+      <dt>Wireframe</dt>
+      <dd><a href="wireframe.html#counselor">Screen map (15–17)</a></dd>
       <dt>Workflow</dt>
       <dd><a href="workflows.html">All workflows (integrated + student journeys)</a></dd>
     </dl>
