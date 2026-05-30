@@ -16,11 +16,19 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 2. Upload changed files to [unstuck-build-spec on GitHub](https://github.com/TeriCampbell/unstuck-build-spec) (browser upload works).
 3. Wait 1–3 minutes; hard-refresh the live URL.
 
-**May 2026 spec sync:** `prompts.html` — prompt evolution + finals (`#evolution`); **on GitHub**. `eval.html` — manual/automated **results** (`#manual`, `#automated`); **upload to GitHub** when ready so PRD links match.
+## Ready to upload (May 29, 2026)
 
-**May 28, 2026 (local — push to GitHub):** `eval.html` — `#enforcement`, `#production`, SAT resource criteria; `prompts.html` — evolution row for `enforcePlanRules`, master-final sequencing lines. Matches `unstuck-app` commit `925a037`.
+Upload these three files to refresh GitHub Pages with prototype app changes (`925a037`, `03d6e32`, `5e7afaf`):
 
-Or double-click `index.html` to preview without publishing.
+| File | What changed |
+|------|----------------|
+| **`eval.html`** | `#intake-prototype`, `#persistence`, enforcement, production smoke table with app commits, automated rows |
+| **`prompts.html`** | Evolution rows (enforce, extract-tasks, unique session), catalog + flow, `#extract-tasks` section, changelog |
+| **`README.md`** | This upload checklist |
+
+**Verify after upload:** On live `eval.html`, search for **“enforcePlanRules”** and **“createPlanSessionId”**. On `prompts.html#evolution`, see rows **master v1.3 + code (May 28)** and **extract-tasks v1.0 (May 29)**.
+
+Other pages (`fields.html`, `wireframe.html`, `screening.html`, `index.html`, PNGs) unchanged — no upload required unless you edited them.
 
 ## Pages
 
@@ -34,7 +42,7 @@ Or double-click `index.html` to preview without publishing.
 | `workflows-first-session.html` | First session diagram |
 | `workflows-checkin-replan.html` | Check-in / replan diagram |
 | `screening.html` | Four-tier distress screening |
-| `eval.html` | Criteria and test cases T1–N6 |
+| `eval.html` | Criteria and test cases T1–N6 + prototype smoke |
 
 ## PNG files
 
@@ -47,4 +55,3 @@ Copy also lives in `TeriCampbell/maven-capstone` at `docs/unstuck/build-spec/` (
 ## Maintainer
 
 Teri Campbell · Product Faculty AI PM Capstone (Cohort 9) · Builder track
-

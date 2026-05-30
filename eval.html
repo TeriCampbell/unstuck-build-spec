@@ -68,7 +68,9 @@
       <li><a href="#edge">Edge test cases</a></li>
       <li><a href="#negative">Negative test cases</a></li>
       <li><a href="#manual">Manual review process</a></li>
+      <li><a href="#intake-prototype">Intake prototype (extract + prefill)</a></li>
       <li><a href="#enforcement">Server-side plan enforcement</a></li>
+      <li><a href="#persistence">Supabase persistence</a></li>
       <li><a href="#automated">Automated checks</a></li>
       <li><a href="#production">Production smoke (live URL)</a></li>
       <li><a href="#iterate">Iteration and frequency</a></li>
@@ -347,7 +349,31 @@
   <p class="section-note">Full scoring on prototype API evals with frozen JSON fixtures (<code>unstuck-app/fixtures/</code>), not the React UI. Run log: <code>unstuck-app/EVALUATION.md</code>. Production prompts: <a href="prompts.html#evolution">prompt evolution</a>.</p>
   <p style="font-size:0.9rem;margin:0 0 12px;"><strong>Approach:</strong> Claude API per case with screening-v1.1 (N2–N4), master-prompt-v1.3 (first-plan cases), plan-update-v1.1 (T4). Score applicable objective criteria pass/fail; subjective checklist on T1, T3, N2.</p>
   <p style="font-size:0.9rem;margin:0 0 12px;"><strong>Results (final prompts):</strong> All 15 cases <strong>pass</strong> — T1–T4, E1–E5, N1–N6. N2–N4 screening: <strong>100%</strong> tier accuracy. Typical cases: ≥90% on applicable objective criteria.</p>
-  <p style="font-size:0.9rem;margin:0 0 16px;"><strong>Iterations during review:</strong> T2 → master v1.1; T1 Schoolhouse → v1.1; E3 → v1.2; E4 → v1.3; N1 → screening v1.1 (N2–N4 re-run after screening change). <strong>May 28, 2026:</strong> server-side <code>enforcePlanRules</code> (prompt still v1.3) after production SAT bootcamp regression — see <a href="#enforcement">enforcement</a>.</p>
+  <p style="font-size:0.9rem;margin:0 0 16px;"><strong>Iterations during review:</strong> T2 → master v1.1; T1 Schoolhouse → v1.1; E3 → v1.2; E4 → v1.3; N1 → screening v1.1 (N2–N4 re-run after screening change). <strong>May 28–29, 2026 (prototype app, not fixture re-run):</strong> <code>enforcePlanRules</code>, <code>extract-tasks</code> + checkbox prefill, unique <code>session_id</code> per Generate — see <a href="#intake-prototype">intake</a>, <a href="#enforcement">enforcement</a>, <a href="#persistence">persistence</a>.</p>
+
+  <h2 id="intake-prototype">Intake prototype — extract tasks and prefill (May 2026)</h2>
+  <p class="section-note">Live React intake (<code>/intake</code>), not the frozen T1–N6 fixture runner. Canonical code: <code>unstuck-app</code> commits <code>03d6e32</code>, <code>5e7afaf</code>.</p>
+  <table>
+    <thead><tr><th>Step</th><th>Behavior</th><th>Pass condition</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Screen 05 — optional free text</td>
+        <td>POST <code>/api/extract-tasks</code> (Haiku, <code>prompts/extract-tasks-v1.txt</code>) on Continue when text present</td>
+        <td>Returns <code>tasks[]</code> + summary when text names deadlines/tests; no blocking error</td>
+      </tr>
+      <tr>
+        <td>Screen 05 — vague free text</td>
+        <td>LLM/regex return no tasks → <code>suggestTasksFromSituationSelections</code> from checkboxes</td>
+        <td>Screen 06 shows starter rows (SAT, college essay, AP, etc.) with placeholder dates — not one empty row</td>
+      </tr>
+      <tr>
+        <td>Screen 06</td>
+        <td>Student edits titles, dates, deadline types before continue</td>
+        <td>Payload matches fixture task shape sent to <code>/api/generate-plan</code></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section-note"><strong>Eval gap:</strong> No frozen fixture case for extract-tasks yet (backlog). Production smoke + <code>npm test</code> (<code>parseSituationFreeText.test.ts</code>, <code>enforcePlanRules.test.mjs</code>, <code>suggestTasksFromSituationSelections.test.mjs</code>) until fixture exists.</p>
 
   <h2 id="enforcement">Server-side plan enforcement (May 2026)</h2>
   <p class="section-note">Prompt-only evals (May 26) could still fail in production when the model ignored day-0 bootcamp or the 28-day Schoolhouse gate. The app now post-processes every plan in <code>unstuck-app/lib/enforcePlanRules.mjs</code> (called from <code>lib/plan.mjs</code>).</p>
@@ -360,7 +386,19 @@
       <tr><td>Tests</td><td><code>npm test</code> in <code>unstuck-app</code> (<code>lib/enforcePlanRules.test.mjs</code>)</td></tr>
     </tbody>
   </table>
-  <p class="section-note">Fixture <code>npm run eval</code> outputs may differ from May 26 frozen <code>eval-runs/</code> JSON because enforcement runs on every generate. Production smoke on the live URL is still required after deploy.</p>
+  <p class="section-note">Fixture <code>npm run eval</code> outputs may differ from May 26 frozen <code>eval-runs/</code> JSON because enforcement runs on every generate. Deploy: <code>unstuck-app</code> <code>925a037</code>. Production smoke required after each deploy.</p>
+
+  <h2 id="persistence">Supabase persistence (2c-db)</h2>
+  <p class="section-note">After successful <strong>Generate plan</strong> on screen 08 only. Tables: <code>sessions</code>, <code>intake_snapshots</code>, <code>plans</code>. Requires Vercel <code>SUPABASE_SERVICE_ROLE_KEY</code> + <code>SUPABASE_URL</code>; SQL migrations <code>001_initial.sql</code>, <code>002_grants.sql</code>.</p>
+  <table>
+    <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>When it writes</td><td>Each successful <code>/api/generate-plan</code> with <code>session_meta</code> (grade + pilot school on screen 02)</td></tr>
+      <tr><td>Unique session</td><td><code>createPlanSessionId()</code> — <strong>new UUID per Generate</strong> (<code>5e7afaf</code>). One row each in <code>sessions</code>, <code>intake_snapshots</code>, <code>plans</code> per generate.</td></tr>
+      <tr><td>UI signal</td><td>“Session saved (for your return visit later).” vs “database save failed” on screen 08</td></tr>
+      <tr><td>Phase 3</td><td>Return visit will load a <em>saved</em> session by id (email/auth) — not implemented in capstone pilot</td></tr>
+    </tbody>
+  </table>
 
   <h2 id="automated">Automated evaluation — results (May 2026)</h2>
   <table>
@@ -370,7 +408,9 @@
     <tbody>
       <tr><td>Valid JSON</td><td><strong>Automated</strong></td><td>Schema parse in eval runner</td></tr>
       <tr><td>Screening tier (N2–N4)</td><td><strong>Automated</strong></td><td>Expected tier label match on fixtures</td></tr>
-      <tr><td>SAT lead time + day-0 bootcamp/Khan</td><td><strong>Automated</strong></td><td><code>lib/enforcePlanRules.mjs</code> on every <code>generatePlan</code> (May 2026)</td></tr>
+      <tr><td>SAT lead time + day-0 bootcamp/Khan</td><td><strong>Automated</strong></td><td><code>lib/enforcePlanRules.mjs</code> on every <code>generatePlan</code> (<code>925a037</code>)</td></tr>
+      <tr><td>Intake task prefill (checkbox fallback)</td><td><strong>Automated</strong></td><td><code>suggestTasksFromSituationSelections.test.mjs</code> (<code>03d6e32</code>)</td></tr>
+      <tr><td>Extract-tasks LLM output</td><td>Manual / backlog</td><td>No fixture case yet; regex + normalize tests partial</td></tr>
       <tr><td>URLs ⊆ allowlist</td><td>Manual (scoring)</td><td>Script planned; checked during manual review</td></tr>
       <tr><td>Banned phrases</td><td>Manual (scoring)</td><td>Script planned</td></tr>
       <tr><td>Acknowledgment length</td><td>Manual (scoring)</td><td>≤ 3 sentences</td></tr>
@@ -379,25 +419,29 @@
   <p class="section-note">Runner: <code>npm run eval -- {caseId}</code> in <code>unstuck-app</code>. Models: Haiku 4.5 (screening), Sonnet 4.6 (master / plan update). Final suite: JSON valid on all plan cases; N2–N4 tier checks PASS on every run; SAT rules enforced in code after parse.</p>
 
   <h2 id="production">Production smoke (live URL)</h2>
-  <p class="section-note">Confirm behavior on the deployed app, not only fixtures. Full log: <code>unstuck-app/EVALUATION.md</code> → Production smoke test.</p>
+  <p class="section-note">Confirm behavior on the deployed app, not only fixtures. Full log: <code>unstuck-app/EVALUATION.md</code> → Production smoke test. Vercel should deploy from <code>unstuck-app</code> <code>main</code> at <code>5e7afaf</code> or later.</p>
   <table>
-    <thead><tr><th>Date</th><th>Check</th><th>Result</th></tr></thead>
+    <thead><tr><th>Date</th><th>Check</th><th>Result</th><th>App commit</th></tr></thead>
     <tbody>
-      <tr><td>2026-05-26</td><td>T1, N2–N4 via <code>/demo</code></td><td><strong>Pass</strong></td></tr>
-      <tr><td>2026-05-28</td><td>2c-db save via <code>/intake/plan</code></td><td><strong>Pass</strong></td></tr>
-      <tr><td>—</td><td>SAT &lt;28d: Khan today, no Schoolhouse (post <code>925a037</code>)</td><td><strong>Pending</strong></td></tr>
-      <tr><td>—</td><td>SAT ≥28d: bootcamp + Khan today in top 3</td><td><strong>Pending</strong></td></tr>
+      <tr><td>2026-05-26</td><td>T1, N2–N4 via <code>/demo</code></td><td><strong>Pass</strong></td><td>2a</td></tr>
+      <tr><td>2026-05-28</td><td>2c-db save via <code>/intake/plan</code> (single session row era)</td><td><strong>Pass</strong></td><td>3b6cabf</td></tr>
+      <tr><td>—</td><td>Screen 06 prefill from checkboxes (vague free text)</td><td><strong>Pending</strong></td><td><code>03d6e32</code></td></tr>
+      <tr><td>—</td><td>Unique <code>sessions</code> row per Generate (two generates → two ids)</td><td><strong>Pending</strong></td><td><code>5e7afaf</code></td></tr>
+      <tr><td>—</td><td>SAT &lt;28d: Khan today, no Schoolhouse</td><td><strong>Pending</strong></td><td><code>925a037</code></td></tr>
+      <tr><td>—</td><td>SAT ≥28d: bootcamp + Khan today in top 3</td><td><strong>Pending</strong></td><td><code>925a037</code></td></tr>
+      <tr><td>—</td><td>Full <code>/intake</code> path + “Session saved” on screen 08</td><td><strong>Pending</strong></td><td>5e7afaf+</td></tr>
     </tbody>
   </table>
-  <p style="font-size:0.88rem;"><strong>URL:</strong> <a href="https://unstuck-app-flame.vercel.app/">unstuck-app-flame.vercel.app</a></p>
+  <p style="font-size:0.88rem;"><strong>URL:</strong> <a href="https://unstuck-app-flame.vercel.app/">unstuck-app-flame.vercel.app</a> · <strong>Pilot codes:</strong> PILOT-A, DEMO</p>
 
   <h2 id="iterate">Iteration and frequency</h2>
   <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
-    <li><strong>May 2026:</strong> Full suite complete on screening v1.1, master v1.3, plan-update v1.1 (<a href="prompts.html#evolution">changelog</a>).</li>
-    <li><strong>May 28, 2026:</strong> <code>enforcePlanRules</code> deployed — re-smoke SAT paths on production; push this spec to GitHub Pages.</li>
-    <li><strong>After any prompt or library change:</strong> Re-run full suite; N2–N4 minimum after screening edits; production smoke if enforcement or intake payload changes.</li>
-    <li><strong>Open gap:</strong> plan-update not yet aligned to master v1.2/v1.3 rules or <code>enforcePlanRules</code>.</li>
-    <li><strong>Post-launch (vision):</strong> Sample production sessions weekly; full suite when library or screening rules change.</li>
+    <li><strong>May 2026:</strong> Full fixture suite on screening v1.1, master v1.3, plan-update v1.1 (<a href="prompts.html#evolution">changelog</a>).</li>
+    <li><strong>May 28–29, 2026:</strong> App shipped <code>925a037</code> (enforce), <code>03d6e32</code> (checkbox prefill), <code>5e7afaf</code> (unique session per plan). Re-smoke production table above; upload this spec to GitHub Pages.</li>
+    <li><strong>After prompt or library change:</strong> Re-run <code>npm run eval</code>; N2–N4 minimum after screening edits.</li>
+    <li><strong>After app-only change:</strong> Production smoke + <code>npm test</code>; fixture re-run optional unless master prompt text changed.</li>
+    <li><strong>Open gaps:</strong> extract-tasks eval fixture; plan-update v1.2/v1.3 + <code>enforcePlanRules</code> on replan path.</li>
+    <li><strong>Post-launch (vision):</strong> Sample production sessions weekly.</li>
   </ul>
 
   <p class="page-footer">

@@ -90,6 +90,7 @@
       <li><a href="#invocation">Invocation rules (cost and caching)</a></li>
       <li><a href="#catalog">Prompt catalog</a></li>
       <li><a href="#evolution">Initial vs. final prompts</a></li>
+      <li><a href="#extract-tasks">1b. Extract tasks (intake)</a></li>
       <li><a href="#screening-prompt">1. Distress screening</a></li>
       <li><a href="#screening-initial">Screening — initial</a></li>
       <li><a href="#screening-final">Screening — final</a></li>
@@ -117,8 +118,9 @@
     <div class="step"><strong>Any free text in session?</strong> → Yes: <span class="pill pill-light">Lighter Claude</span> distress screening (batched, one call per session)<br>
       → Tier: standard | elevated | crisis | inappropriate</div>
     <div class="step"><strong>Inappropriate tier?</strong> → Stop. No plan prompt. Free text disabled for account.</div>
+    <div class="step"><strong>Intake screen 05 with free text?</strong> → <span class="pill pill-light">Lighter Claude</span> extract-tasks (structured <code>tasks[]</code> for screen 06; checkbox fallback if empty)</div>
     <div class="step"><strong>Which journey?</strong>
-      <br>· First plan after intake → <span class="pill pill-sonnet">Sonnet</span> master prompt
+      <br>· First plan after intake → <span class="pill pill-sonnet">Sonnet</span> master prompt → post-parse <code>enforcePlanRules</code>
       <br>· Dashboard “next step” → <span class="pill pill-sonnet">Sonnet</span> plan continuation
       <br>· Dashboard “plan update” → screening if text → <span class="pill pill-sonnet">Sonnet</span> plan update
       <br>· After check-in failures → screening if text → <span class="pill pill-sonnet">Sonnet</span> adaptive replanning
@@ -176,7 +178,14 @@
         <td><a href="#screening-initial">v1.0</a></td>
         <td><a href="#screening-final">v1.1</a></td>
         <td>Lighter Claude</td>
-        <td>Any session with free text</td>
+        <td>Any session with free text (plan path)</td>
+      </tr>
+      <tr>
+        <td><a href="#extract-tasks">Extract tasks</a></td>
+        <td>—</td>
+        <td><a href="#extract-tasks">v1.0</a></td>
+        <td>Lighter Claude (Haiku)</td>
+        <td>Screen 05 Continue when situation free text present</td>
       </tr>
       <tr>
         <td><a href="#master">Master (first plan)</a></td>
@@ -248,10 +257,22 @@
         <td>Expired Schoolhouse in ask-me-later must not re-surface as enrollable</td>
       </tr>
       <tr>
-        <td>master v1.3 + code (May 2026)</td>
-        <td><code>lib/enforcePlanRules.mjs</code> — SAT &lt;28 / ≥28, day-0 bootcamp, Khan pairing; prompt sequencing lines added (still v1.3 tag)</td>
+        <td>master v1.3 + code (May 28)</td>
+        <td><code>lib/enforcePlanRules.mjs</code> — SAT &lt;28 / ≥28, day-0 bootcamp, Khan pairing; prompt sequencing lines in <code>master-prompt-v1.txt</code> (still v1.3 tag)</td>
         <td>Production smoke</td>
-        <td>Model chained bootcamp after AP and surfaced Schoolhouse at 27 days despite prompt rules</td>
+        <td>Model chained bootcamp after AP and surfaced Schoolhouse at 27 days despite prompt rules (<code>925a037</code>)</td>
+      </tr>
+      <tr>
+        <td>extract-tasks v1.0 (May 29)</td>
+        <td>New Haiku prompt <code>extract-tasks-v1.txt</code> + regex/checkbox fallback in app</td>
+        <td>Intake smoke</td>
+        <td>Vague free text left screen 06 empty; checkbox selections now prefill tasks (<code>03d6e32</code>)</td>
+      </tr>
+      <tr>
+        <td>Persistence (May 29)</td>
+        <td><code>createPlanSessionId()</code> — new Supabase <code>sessions</code> row per Generate plan</td>
+        <td>2c-db smoke</td>
+        <td>Prior one-browser UUID reused one <code>sessions</code> row (<code>5e7afaf</code>)</td>
       </tr>
       <tr>
         <td>plan-update v1.0 → v1.1</td>
@@ -261,6 +282,20 @@
       </tr>
     </tbody>
   </table>
+
+  <h2 id="extract-tasks">1b. Extract tasks prompt (intake — capstone)</h2>
+  <p class="section-note">Not in the May 2026 fixture eval suite (T1–N6). Production: <code>unstuck-app/prompts/extract-tasks-v1.txt</code>, route <code>/api/extract-tasks</code>, eval tag <code>extract-tasks-v1.0</code>.</p>
+  <table>
+    <thead><tr><th>Attribute</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>Purpose</td><td>Parse optional situation free text into <code>tasks[]</code> (task_id, title, due_date, deadline_type) for screen 06</td></tr>
+      <tr><td>Model</td><td>Haiku (same tier as screening)</td></tr>
+      <tr><td>When it fires</td><td>Screen 05 Continue when <code>free_text.situation</code> is non-empty</td></tr>
+      <tr><td>Fallback</td><td>Regex (<code>suggestTasksFromFreeText</code>); then checkbox templates (<code>suggestTasksFromSituationSelections</code>) if still empty</td></tr>
+      <tr><td>Output</td><td>JSON: <code>summary</code>, <code>tasks[]</code>; UI shows “What we heard” on screen 06</td></tr>
+    </tbody>
+  </table>
+  <p class="section-note">See <a href="eval.html#intake-prototype">eval.html — intake prototype</a> for pass conditions and production smoke.</p>
 
   <h2 id="screening-prompt">1. Distress screening prompt</h2>
   <p class="section-note">Safety-critical. Must be tested before free text is enabled in production builds. UI owns student-facing copy for each tier.</p>
@@ -626,8 +661,9 @@ Prioritize seven_day_steps for the next 7 days from current_date. Include every 
     <thead><tr><th>Artifact</th><th>Initial</th><th>Final (production)</th><th>Status</th></tr></thead>
     <tbody>
       <tr><td>screening-v1</td><td><a href="#screening-initial">v1.0</a></td><td><a href="#screening-final">v1.1</a></td><td>Eval N1–N6 pass</td></tr>
-      <tr><td>master-prompt-v1</td><td><a href="#master-initial">v1.0</a></td><td><a href="#master-final">v1.3</a></td><td>Eval T/E/N pass</td></tr>
-      <tr><td>plan-update-v1</td><td><a href="#plan-update-initial">v1.0</a></td><td><a href="#plan-update-final">v1.1</a></td><td>T4 pass; align v1.2/v1.3 rules pending</td></tr>
+      <tr><td>extract-tasks-v1</td><td>—</td><td><a href="#extract-tasks">v1.0</a></td><td>Intake smoke; eval fixture backlog</td></tr>
+      <tr><td>master-prompt-v1</td><td><a href="#master-initial">v1.0</a></td><td><a href="#master-final">v1.3</a> + <code>enforcePlanRules</code></td><td>Eval T/E/N pass; code <code>925a037</code></td></tr>
+      <tr><td>plan-update-v1</td><td><a href="#plan-update-initial">v1.0</a></td><td><a href="#plan-update-final">v1.1</a></td><td>T4 pass; align v1.2/v1.3 + enforcement pending</td></tr>
       <tr><td>Replan / continuation</td><td>—</td><td>—</td><td>Not in eval suite yet</td></tr>
     </tbody>
   </table>
