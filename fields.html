@@ -404,6 +404,20 @@
     </tbody>
   </table>
 
+  <h2 id="api-routes">API routes (capstone prototype)</h2>
+  <p class="section-note">Server routes in <code>unstuck-app</code> (Vercel). See <a href="DATA_MODEL.md">DATA_MODEL.md</a> for tables.</p>
+  <table>
+    <thead><tr><th>Route</th><th>Purpose</th><th>Shipped</th></tr></thead>
+    <tbody>
+      <tr><td><code>POST /api/generate-plan</code></td><td>Screening + master plan JSON</td><td>Yes</td></tr>
+      <tr><td><code>POST /api/extract-tasks</code></td><td>Screen 05 free-text → task rows</td><td>Yes</td></tr>
+      <tr><td><code>POST /api/load-plan</code></td><td>Return visit by <code>visitor_id</code></td><td>Yes (Phase 3)</td></tr>
+      <tr><td><code>POST /api/submit-check-in</code></td><td>Structured check-in → <code>check_ins</code></td><td>Yes (Phase 3)</td></tr>
+      <tr><td><code>POST /api/log-event</code></td><td>Product analytics events</td><td>Yes</td></tr>
+      <tr><td><code>POST /api/counselor-aggregates</code></td><td>School/grade/date/day filters; KPIs; categories; pattern insights</td><td>Yes (Phase 4)</td></tr>
+    </tbody>
+  </table>
+
   <h2 id="not-sent">Not sent to the AI</h2>
   <p class="section-note">Collected for product behavior, compliance, or analytics; not in plan-generation payloads in v1.</p>
   <table>
@@ -428,7 +442,7 @@
       </tr>
       <tr>
         <td>Counselor dashboard configuration (screen 16)</td>
-        <td>Demo/static in v1; student library is system prompt, not live counselor config</td>
+        <td>Deferred post-capstone; screen 15 uses live SQL aggregates, not per-school config UI</td>
       </tr>
       <tr>
         <td>Click events on resource links</td>

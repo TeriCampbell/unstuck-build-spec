@@ -388,15 +388,16 @@
   </table>
   <p class="section-note">Fixture <code>npm run eval</code> outputs may differ from May 26 frozen <code>eval-runs/</code> JSON because enforcement runs on every generate. Deploy: <code>unstuck-app</code> <code>925a037</code>. Production smoke required after each deploy.</p>
 
-  <h2 id="persistence">Supabase persistence (2c-db)</h2>
-  <p class="section-note">After successful <strong>Generate plan</strong> on screen 08 only. Tables: <code>sessions</code>, <code>intake_snapshots</code>, <code>plans</code>. Requires Vercel <code>SUPABASE_SERVICE_ROLE_KEY</code> + <code>SUPABASE_URL</code>; SQL migrations <code>001_initial.sql</code>, <code>002_grants.sql</code>.</p>
+  <h2 id="persistence">Supabase persistence (2c-db → Phase 3–4)</h2>
+  <p class="section-note">Migrations <code>001</code>–<code>007</code>: <code>sessions</code>, <code>intake_snapshots</code>, <code>plans</code>, <code>events</code>, <code>visitor_id</code>, <code>check_ins</code>. Canonical schema: <a href="DATA_MODEL.md">DATA_MODEL.md</a> · KPI definitions: <a href="DATA_ATLAS.md">DATA_ATLAS.md</a>.</p>
   <table>
     <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
     <tbody>
-      <tr><td>When it writes</td><td>Each successful <code>/api/generate-plan</code> with <code>session_meta</code> (grade + pilot school on screen 02)</td></tr>
-      <tr><td>Unique session</td><td><code>createPlanSessionId()</code> — <strong>new UUID per Generate</strong> (<code>5e7afaf</code>). One row each in <code>sessions</code>, <code>intake_snapshots</code>, <code>plans</code> per generate.</td></tr>
-      <tr><td>UI signal</td><td>“Session saved (for your return visit later).” vs “database save failed” on screen 08</td></tr>
-      <tr><td>Phase 3</td><td>Return visit will load a <em>saved</em> session by id (email/auth) — not implemented in capstone pilot</td></tr>
+      <tr><td>First plan (08)</td><td>Each successful <code>/api/generate-plan</code> → new <code>session_id</code> + snapshot + plan rows</td></tr>
+      <tr><td>Return visit</td><td>Browser <code>visitor_id</code> → <code>POST /api/load-plan</code> for dashboard (04), toolkit (09), check-in (10), progress (11)</td></tr>
+      <tr><td>Check-in</td><td><code>POST /api/submit-check-in</code> → <code>check_ins</code> (structured responses; no email token in capstone)</td></tr>
+      <tr><td>Events</td><td><code>POST /api/log-event</code> — screen views, plan generated, resource clicks</td></tr>
+      <tr><td>Counselor</td><td><code>POST /api/counselor-aggregates</code> — aggregates only; demo seed via <code>npm run seed:demo</code></td></tr>
     </tbody>
   </table>
 
@@ -428,6 +429,8 @@
       <tr><td>2026-05-29</td><td>Screen 06 prefill A/B/C (checkbox, 2 midterms, biology test)</td><td><strong>Pass</strong></td><td><code>4cf2793</code></td></tr>
       <tr><td>2026-05-29</td><td>SAT &lt;28d and ≥28d via <code>/intake/plan</code></td><td><strong>Pass</strong></td><td><code>925a037</code></td></tr>
       <tr><td>2026-05-29</td><td>Full <code>/intake</code> → plan (~1 min; stretch-break copy on screen 08)</td><td><strong>Pass</strong></td><td>4cf2793+</td></tr>
+      <tr><td>2026-05-30</td><td>Return <code>/dashboard</code> → check-in → progress (in-app)</td><td><strong>Pass</strong> (local)</td><td>Phase 3</td></tr>
+      <tr><td>2026-05-30</td><td>Counselor <code>/counselor/dashboard</code> filters + KPIs + seed</td><td><strong>Pass</strong> (local)</td><td><code>1cce2c2</code></td></tr>
     </tbody>
   </table>
   <p style="font-size:0.88rem;"><strong>URL:</strong> <a href="https://unstuck-app-flame.vercel.app/">unstuck-app-flame.vercel.app</a> · <strong>Pilot codes:</strong> PILOT-A, DEMO</p>
