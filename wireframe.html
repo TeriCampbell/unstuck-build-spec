@@ -30,7 +30,7 @@
 <div class="top-bar">
   <div>
     <div class="logo">Unstuck</div>
-    <div class="meta">Build specification · wireframe v5 · 17 screens</div>
+    <div class="meta">Build specification · 17 screens · May 2026</div>
   </div>
   <div class="meta">Internal reference</div>
 </div>
@@ -48,12 +48,14 @@
 <main class="main">
   <h1>Wireframe map</h1>
   <p class="lead">
-    Every student and counselor screen in wireframe v5: route, data collected, AI involvement, and which user journey uses the screen.
+    Every student and counselor screen in the interactive wireframe: route, data collected, AI involvement, and which user journey uses the screen.
+    <strong>Capstone app</strong> routes below are what ships on Vercel; other routes are vision or deferred unless marked <em>Capstone</em>.
   </p>
 
   <a class="wireframe-link" href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">
-    Open interactive wireframe v5 (17 screens) →
+    Open interactive wireframe (17 screens) →
   </a>
+  <p class="section-note"><strong>Truth order:</strong> (1) Vercel app <a href="https://unstuck-app-flame.vercel.app/">unstuck-app-flame.vercel.app</a> (2) this screen map (3) interactive wireframe on GitHub. As of May 2026, <a href="https://tericampbell.github.io/unstuck_wireframe.html">GitHub wireframe</a> is still the <em>old</em> design (Lincoln High, 4 KPIs, token check-in) until you upload local <code>unstuck_wireframe_V5.html</code>.</p>
 
   <nav class="toc">
     <strong>On this page</strong>
@@ -94,47 +96,47 @@
       <tr data-journey="account all first-plan return checkin">
         <td>01</td>
         <td>Home / Landing</td>
-        <td class="mono">unstuck.app</td>
-        <td>Auth choice (Google, email, login). No AI input.</td>
+        <td class="mono">/ <em>(vision: OAuth)</em></td>
+        <td><strong>Capstone:</strong> app home links to intake, demo, counselor. Wireframe: Google/email auth — V2.</td>
         <td>None</td>
         <td>All</td>
       </tr>
       <tr data-journey="account first-plan all">
         <td>02</td>
-        <td>Account creation &amp; age gate</td>
-        <td class="mono">/signup</td>
-        <td>Email; month/year of birth; optional state, school type; <strong>grade level</strong> (→ master prompt).</td>
+        <td>Account / pilot setup</td>
+        <td class="mono">/intake <em>(Capstone)</em></td>
+        <td>Grade + pilot school code (<code>PILOT-A</code>, <code>DEMO</code>); <code>visitor_id</code>. No email login.</td>
         <td>None</td>
         <td>first-plan, account</td>
       </tr>
       <tr data-journey="account first-plan all">
         <td>03</td>
         <td>Trusted contact setup</td>
-        <td class="mono">/setup</td>
-        <td>Contact name, email; visibility checkboxes. Optional, skippable. Not sent to plan prompts in v1.</td>
+        <td class="mono">/setup <em>(V2)</em></td>
+        <td>Not built in capstone. Wireframe: contact name, email; permissions.</td>
         <td>None</td>
         <td>first-plan, account</td>
       </tr>
       <tr data-journey="return all checkin first-plan">
         <td>04</td>
         <td>Student dashboard</td>
-        <td class="mono">/dashboard</td>
-        <td>Read-only plan, toolkit, ask me later. Actions: next step, plan update, view toolkit. No new intake fields.</td>
-        <td>Triggers continuation or update prompts (buttons)</td>
+        <td class="mono">/dashboard <em>(Capstone)</em></td>
+        <td><code>POST /api/load-plan</code> by <code>visitor_id</code>. Check-in, toolkit, view plan, update plan (→ 05 pre-fill). “Next step only” LLM — V2.</td>
+        <td>Plan display from saved JSON; update routes to intake</td>
         <td>return, checkin, first-plan</td>
       </tr>
       <tr data-journey="first-plan flagged all">
         <td>05</td>
         <td>Situation selection</td>
-        <td class="mono">/start</td>
+        <td class="mono">/intake/situation <em>(Capstone)</em></td>
         <td>Multi-select situation checkboxes; optional 280-char text per selection (screened). Hidden if flagged.</td>
         <td>Screening → Master (after 06–07)</td>
         <td>first-plan, flagged</td>
       </tr>
       <tr data-journey="first-plan all">
         <td>06</td>
-        <td>Intake flow</td>
-        <td class="mono">/intake</td>
+        <td>Tasks</td>
+        <td class="mono">/intake/tasks <em>(Capstone)</em></td>
         <td>Per task: name (dropdown), due date, deadline type. Structured only.</td>
         <td>Feeds master</td>
         <td>first-plan</td>
@@ -142,7 +144,7 @@
       <tr data-journey="first-plan all">
         <td>07</td>
         <td>Clarifying questions</td>
-        <td class="mono">/clarify</td>
+        <td class="mono">/intake/clarify <em>(Capstone)</em></td>
         <td>Available time; started status; difficulty; deadline changes since entry. No free text (v5).</td>
         <td>Feeds master</td>
         <td>first-plan</td>
@@ -150,7 +152,7 @@
       <tr data-journey="first-plan crisis all">
         <td>08</td>
         <td>Plan delivery</td>
-        <td class="mono">/plan</td>
+        <td class="mono">/intake/plan <em>(Capstone)</em></td>
         <td>Displays model output: acknowledgment, full-scope plan, seven-day steps; include/exclude/ask me later per resource; optional share plan.</td>
         <td>Master output rendered here</td>
         <td>first-plan, crisis</td>
@@ -158,7 +160,7 @@
       <tr data-journey="return checkin all">
         <td>09</td>
         <td>Toolkit view</td>
-        <td class="mono">/toolkit</td>
+        <td class="mono">/intake/toolkit <em>(Capstone)</em></td>
         <td>Resource cards, open-link clicks (analytics). Not LLM input.</td>
         <td>None</td>
         <td>return, checkin</td>
@@ -166,15 +168,15 @@
       <tr data-journey="checkin all return">
         <td>10</td>
         <td>Check-in response</td>
-        <td class="mono">/checkin?token=…</td>
-        <td>Per task: yes / in progress / no / attempted but could not complete; optional contact counselor; conditional 140-char barrier text (screened).</td>
-        <td>Screening if text → feeds replan</td>
+        <td class="mono">/intake/check-in <em>(Capstone)</em></td>
+        <td>Production copy: “How are your tasks going?” — buttons <em>Yes, I finished this</em> · <em>In progress</em> · <em>Not yet</em> · <em>I tried but could not finish</em>; page-level “I want to contact my school counselor.” <code>POST /api/submit-check-in</code>. V2: email token URL; per-task 140-char barrier.</td>
+        <td>Structured only in capstone; adaptive replan LLM — V2</td>
         <td>checkin, return</td>
       </tr>
       <tr data-journey="checkin return all">
         <td>11</td>
         <td>Progress summary</td>
-        <td class="mono">/progress</td>
+        <td class="mono">/intake/progress <em>(Capstone)</em></td>
         <td>Summary from check-ins; confidence radio (metrics, not plan prompt). Button to update plan.</td>
         <td>None (display)</td>
         <td>checkin, return</td>
@@ -190,9 +192,9 @@
       <tr data-journey="return all">
         <td>13</td>
         <td>Plan update</td>
-        <td class="mono">/update</td>
-        <td>Change-state checkboxes (≥1); optional 280-char text (screened). Prior plan loaded from DB.</td>
-        <td>Screening → Plan update</td>
+        <td class="mono">/intake/situation <em>(Capstone: pre-fill)</em></td>
+        <td>Capstone: dashboard → situation (05) with prior intake pre-filled → new plan (08). Dedicated /update screen — V2.</td>
+        <td>Screening + master on regenerate</td>
         <td>return</td>
       </tr>
       <tr data-journey="flagged first-plan all">
@@ -225,8 +227,7 @@
         <td>Counselor dashboard</td>
         <td class="mono">/counselor/dashboard</td>
         <td>
-          Filters: grade (all or 9–12), date range (From/To, inclusive), day of week. KPIs in range: students with a plan, new plan sessions, return plan sessions, resource engagement %, contact requests.
-          Sessions by category (session count + % of plan sessions in range). Resource engagement list. <strong>Patterns &amp; Actionable Insights</strong> (rule-based blurb from top categories/resources; no counselor LLM). Requires <code>visitor_id</code> on sessions; small-n suppression except capstone demo school.
+          <strong>Production UI (Vercel):</strong> Title “Counselor dashboard” only — no school name on screen. Header: grade dropdown (All grades, 9–12). Row: <strong>From</strong> / <strong>To</strong> dates, <strong>Day of week</strong>. <strong>Five KPIs:</strong> Students with a plan; New plan sessions; Return plan sessions; Resource engagement; Contact requests. Sessions by category (Sessions + % of total columns). <strong>Patterns &amp; Actionable Insights</strong> (rule-based). Resource engagement High/Med/Low. Backend: <code>DEMO</code> school hardcoded in capstone UI; <code>POST /api/counselor-aggregates</code>. No “Configure resources” button.
         </td>
         <td>Rule-based insights only (no aggregate LLM)</td>
         <td>counselor</td>
@@ -252,17 +253,20 @@
 
   <h2 id="paths">Common paths (screen order)</h2>
 
-  <h3>New student → first plan</h3>
-  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">01 → 02 → 03 → 05 → 06 → 07 → [screening] → 08 → (09 toolkit as needed)</p>
+  <h3>New student → first plan (capstone)</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Home → /intake (02) → 05 → 06 → 07 → [screening] → 08 → optional 09 toolkit</p>
 
-  <h3>Return → next step only</h3>
-  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">01 or 04 → continuation prompt → updated focus on 04 / 08</p>
+  <h3>Return → plan update (capstone)</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">/dashboard → update plan → /intake/situation (pre-fill) → 06–08</p>
 
-  <h3>Return → plan update</h3>
-  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">04 → 13 → [screening if text] → 08</p>
+  <h3>Check-in (capstone)</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Direct: /intake/check-in → /intake/progress (pushed check-in; needs visitor_id on device). Return path: /dashboard → Check in button → same screens. Pilot message link: /intake/check-in — not /dashboard.</p>
 
-  <h3>Check-in → replan</h3>
-  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Email link → 10 → 11 → (login) 04 or replan session → adaptive replan → 08</p>
+  <h3>Check-in → replan (V2)</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Email/SMS token → 10 → 11 → adaptive replan LLM → 08</p>
+
+  <h3>Return → next step only (V2)</h3>
+  <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">04 → continuation Sonnet call → single next action</p>
 
   <h3>Crisis / elevated</h3>
   <p class="mono" style="font-size:0.85rem;margin-bottom:20px;">Can interrupt after 05, 07, 10, or 13 screening → 12. Plan may exist but delivery gated.</p>

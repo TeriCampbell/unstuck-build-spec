@@ -11,7 +11,7 @@
 <div class="top-bar">
   <div>
     <div class="logo">Unstuck</div>
-    <div class="meta">Build specification · wireframe v5 · May 2026</div>
+    <div class="meta">Build specification · May 2026</div>
   </div>
   <div class="meta">Internal reference · not the submitted PRD</div>
 </div>
@@ -24,6 +24,8 @@
   <a href="workflows.html">Workflows</a>
   <a href="screening.html">Screening</a>
   <a href="eval.html">Evaluation</a>
+  <a href="DATA_MODEL.md">Data model</a>
+  <a href="DATA_ATLAS.md">Data atlas</a>
 </nav>
 
 <main class="main">
@@ -37,9 +39,13 @@
     <strong>How to use:</strong> Double-click this file (<code>index.html</code>) to open in a browser.
     One entry point; other pages are linked from the nav bar.
     <br><br>
-    <strong>Interactive wireframe:</strong>
-    <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Open wireframe v5 (17 screens) →</a>
-    · <a href="wireframe.html">Screen map</a> (this site)
+    <strong>Live capstone app:</strong>
+    <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">unstuck-app-flame.vercel.app</a>
+    · Counselor: <a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a>
+    <br><br>
+    <strong>Interactive wireframe (PRD Design link):</strong>
+    <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Open wireframe (17 screens) →</a>
+    · <a href="wireframe.html">Screen map</a> (capstone routes vs V2 on this site)
   </div>
 
   <h2>Filter by journey</h2>
@@ -60,23 +66,18 @@
     <div class="journey-id">journey: first-plan</div>
     <span class="tag tag-green">Master prompt</span>
     <span class="tag tag-amber">Distress screening</span>
-    <span class="tag tag-gray">Wireframe 02–08</span>
+    <span class="tag tag-gray">Capstone: /intake → plan</span>
     <ol class="step-list">
-      <li><strong>02</strong> Account creation, age gate, grade level captured</li>
-      <li><strong>03</strong> Trusted contact and permissions (not sent to plan prompt)</li>
-      <li><strong>05</strong> Situation checkboxes; optional free text per selection (280 chars), screened</li>
-      <li><strong>06</strong> Tasks: name, due date, deadline type (repeat per item)</li>
-      <li><strong>07</strong> Available time, started status, difficulty, deadline-change selector</li>
-      <li><strong>Screening</strong> Batched if any free text in session</li>
-      <li><strong>08</strong> Plan delivery — acknowledgment + full-scope plan + seven-day view (JSON)</li>
+      <li><strong>02</strong> Grade + pilot code (<code>PILOT-A</code> / <code>DEMO</code>); <code>visitor_id</code> — not full OAuth (V2)</li>
+      <li><strong>03</strong> Trusted contact — <em>V2 / not in capstone app</em></li>
+      <li><strong>05–07</strong> Situation → tasks → clarify; optional screened free text on 05</li>
+      <li><strong>08</strong> Plan delivery — Supabase save + events on success</li>
     </ol>
     <dl class="detail-grid">
       <dt>AI prompt</dt>
-      <dd>Distress screening (lighter model) → Master prompt (Sonnet) if tier allows</dd>
+      <dd>Distress screening (Haiku) → Master prompt (Sonnet) if tier allows</dd>
       <dt>Required inputs</dt>
       <dd><a href="fields.html#master">See master prompt table</a></dd>
-      <dt>Optional inputs</dt>
-      <dd>Situation free text (280) — see <a href="fields.html#optional">optional fields</a></dd>
       <dt>Workflow visual</dt>
       <dd><a href="workflows-first-session.html">First session diagram</a></dd>
     </dl>
@@ -86,18 +87,15 @@
   <article class="journey-card" data-journey="return-next all">
     <div class="journey-title">Return student → next step only</div>
     <div class="journey-id">journey: return-next</div>
-    <span class="tag tag-green">Plan continuation</span>
-    <span class="tag tag-gray">Wireframe 04</span>
+    <span class="tag tag-gray">V2 — not in capstone</span>
     <ol class="step-list">
-      <li><strong>04</strong> Dashboard — student selects &ldquo;I am on track, what is my next step&rdquo;</li>
-      <li>Model receives current plan + check-in history + current date</li>
-      <li>Single next action returned (not full plan regeneration)</li>
+      <li><strong>04</strong> Dashboard — &ldquo;I am on track, what is my next step&rdquo;</li>
+      <li>Separate continuation LLM call — single next action</li>
+      <li><strong>Capstone instead:</strong> dashboard shows focus/up-next from saved plan JSON (no extra API)</li>
     </ol>
     <dl class="detail-grid">
-      <dt>AI prompt</dt>
-      <dd>Plan continuation (Sonnet)</dd>
-      <dt>Required inputs</dt>
-      <dd><a href="fields.html#continuation">Continuation table</a></dd>
+      <dt>Why V2</dt>
+      <dd>Second Sonnet path deferred for demo scope; plan JSON already surfaces Today focus</dd>
     </dl>
   </article>
 
@@ -107,15 +105,16 @@
     <div class="journey-id">journey: return-update</div>
     <span class="tag tag-green">Plan update prompt</span>
     <span class="tag tag-amber">Distress screening</span>
-    <span class="tag tag-gray">Wireframe 04, 13</span>
+    <span class="tag tag-gray">Capstone: 04 → 05 pre-fill</span>
     <ol class="step-list">
-      <li><strong>04</strong> Dashboard — &ldquo;Something has changed, I need to update my plan&rdquo;</li>
-      <li><strong>13</strong> Change-state checkboxes (at least one required); optional free text 280 chars, screened</li>
-      <li>Model receives prior plan + check-in history + change inputs; regenerates full scope + seven-day view</li>
+      <li><strong>04</strong> <code>/dashboard</code> — load plan via <code>POST /api/load-plan</code></li>
+      <li><strong>Capstone:</strong> &ldquo;Something has changed&rdquo; → <strong>05</strong> situation with prior intake pre-filled (not dedicated screen 13)</li>
+      <li>Regenerate plan on <strong>08</strong></li>
+      <li><strong>V2:</strong> dedicated screen 13 change-state UI</li>
     </ol>
     <dl class="detail-grid">
       <dt>AI prompt</dt>
-      <dd>Screening if free text → Plan update (Sonnet)</dd>
+      <dd>Screening if free text → Master / plan update (Sonnet)</dd>
       <dt>Required inputs</dt>
       <dd><a href="fields.html#update">Plan update table</a></dd>
     </dl>
@@ -125,22 +124,22 @@
   <article class="journey-card" data-journey="checkin-replan all">
     <div class="journey-title">Check-in → replan</div>
     <div class="journey-id">journey: checkin-replan</div>
-    <span class="tag tag-green">Adaptive replanning</span>
-    <span class="tag tag-amber">Distress screening</span>
+    <span class="tag tag-green">Check-in shipped</span>
+    <span class="tag tag-gray">Adaptive replan — V2</span>
     <span class="tag tag-gray">Wireframe 10, 11</span>
     <ol class="step-list">
-      <li>Email tokenized link → <strong>10</strong> Check-in per task: yes / no / in progress / attempted but could not complete / contact counselor</li>
-      <li>Optional 140-char &ldquo;what got in the way?&rdquo; if attempted but could not complete — screened</li>
-      <li><strong>11</strong> Progress summary from check-in data</li>
-      <li>On return session or failed tasks: adaptive replanning prompt with prior plan + history</li>
+      <li><strong>Capstone (shipped):</strong> <code>/dashboard</code> → <code>/intake/check-in</code> → <code>/intake/progress</code>; <code>POST /api/submit-check-in</code> → <code>check_ins</code></li>
+      <li>Per task: yes / no / in progress / attempted but could not complete / contact counselor (aggregate KPI on screen 15; no counselor push — V2)</li>
+      <li><strong>Pilot without email:</strong> message with <a href="https://unstuck-app-flame.vercel.app/intake/check-in">/intake/check-in</a> (pushed check-in). <code>/dashboard</code> is for return visits, not the reminder link. Same browser as plan generate (<code>visitor_id</code>).</li>
+      <li><strong>V2:</strong> Resend email/SMS with <code>/checkin?token=…</code>; optional 140-char barrier text; adaptive replan LLM after failed tasks</li>
     </ol>
     <dl class="detail-grid">
       <dt>AI prompt</dt>
-      <dd>Screening on optional check-in text → Adaptive replanning (Sonnet)</dd>
+      <dd>Capstone: structured check-in only. V2: screening on barrier text → adaptive replan (Sonnet)</dd>
       <dt>Required inputs</dt>
       <dd><a href="fields.html#replan">Replan table</a></dd>
       <dt>Workflow visual</dt>
-      <dd><a href="workflows-checkin-replan.html">Check-in &amp; replan diagram</a></dd>
+      <dd><a href="workflows-checkin-replan.html">Check-in &amp; replan diagram</a> (includes V2 path)</dd>
     </dl>
   </article>
 
@@ -155,7 +154,6 @@
       <li><strong>Elevated:</strong> support resources before plan; plan generated but not immediately pushed</li>
       <li><strong>Crisis:</strong> crisis resources (e.g. 988); app stays open; plan not immediately pushed</li>
       <li><strong>12</strong> Crisis resources screen when UI surfaces support</li>
-      <li>Behavioral pattern detection (structured check-ins only) may also surface support — see <a href="screening.html">Screening</a></li>
     </ol>
   </article>
 
@@ -180,26 +178,25 @@
   <article class="journey-card" data-journey="counselor all">
     <div class="journey-title">Counselor (capstone prototype)</div>
     <div class="journey-id">journey: counselor</div>
-    <span class="tag tag-gray">Screen 15 shipped (Phase 4)</span>
-    <span class="tag tag-gray">Screens 16–17 deferred</span>
+    <span class="tag tag-green">Screen 15 — live SQL</span>
+    <span class="tag tag-gray">Screens 16–17 — V2</span>
     <ol class="step-list">
-      <li><strong>15</strong> Counselor dashboard — live Supabase aggregates by school (<code>DEMO</code> pilot code); grade, date range, and day-of-week filters; KPI boxes; sessions by category; resource engagement; <strong>Patterns &amp; Actionable Insights</strong> (rule-based, no counselor LLM)</li>
-      <li><strong>16</strong> Resource configuration — not built in capstone MVP</li>
-      <li><strong>17</strong> Student contact-request notification — not built in capstone MVP (contact intent counted via <code>check_ins</code> on screen 15)</li>
-      <li>Student plan generation uses system-prompt resource library, not live counselor config in v1</li>
-      <li>Aggregate LLM narrative on counselor dashboard is post-v1</li>
+      <li><strong>15 (built):</strong> Live aggregates from Supabase via <code>POST /api/counselor-aggregates</code> — partitioned by <code>school_id</code> (pilot code). Filters: grade, date range, day of week. KPIs, sessions by category, resource engagement, <strong>Patterns &amp; Actionable Insights</strong> (rule-based).</li>
+      <li><strong>Demo volume:</strong> <code>npm run seed:demo</code> plus <code>DEMO</code> pilot code — representative data for video; same code path as real pilot rows.</li>
+      <li><strong>16</strong> Resource configuration UI — V2</li>
+      <li><strong>17</strong> Counselor push notification on contact request — V2 (contact count on dashboard today)</li>
     </ol>
     <dl class="detail-grid">
       <dt>Live route</dt>
-      <dd><a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a> (also from app home)</dd>
+      <dd><a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a></dd>
+      <dt>Data docs</dt>
+      <dd><a href="DATA_MODEL.md">DATA_MODEL.md</a> · <a href="DATA_ATLAS.md">DATA_ATLAS.md</a></dd>
       <dt>Wireframe</dt>
       <dd><a href="wireframe.html#counselor">Screen map (15–17)</a></dd>
-      <dt>Workflow</dt>
-      <dd><a href="workflows.html">All workflows (integrated + student journeys)</a></dd>
     </dl>
   </article>
 
-  <p class="page-footer">Build spec complete (chunks 1–6). <a href="eval.html">Evaluation</a> · <a href="workflows.html">Workflows</a></p>
+  <p class="page-footer">Build spec · <a href="eval.html">Evaluation</a> · <a href="workflows.html">Workflows</a> · Schema <a href="DATA_MODEL.md">DATA_MODEL</a></p>
 </main>
 
 <script src="filter.js"></script>
