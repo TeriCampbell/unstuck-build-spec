@@ -1,0 +1,34 @@
+/* Shared doc pages: data-model.html, data-atlas.html */
+.doc-content .toc {
+  margin: 16px 0 28px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+}
+
+.doc-content .toc ul { margin: 8px 0 0 1.2rem; }
+.doc-content .toc li { margin-bottom: 6px; }
+
+.doc-content .section-note {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-bottom: 14px;
+  max-width: 720px;
+}
+
+.doc-content pre.mermaid {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 16px 0 24px;
+  overflow-x: auto;
+}
+
+.doc-content h3 {
+  font-size: 1rem;
+  margin: 22px 0 10px;
+  font-family: "Courier New", monospace;
+}

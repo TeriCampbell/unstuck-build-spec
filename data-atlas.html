@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Data atlas</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="spec-doc.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body data-spec-page="data-atlas">
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · identity &amp; triggers</div>
+  </div>
+  <div class="meta">Use when IDs get confusing</div>
+</div>
+
+<nav class="site-nav"></nav>
+
+<main class="main doc-content">
+  <h1>Data atlas</h1>
+  <p class="lead">
+    What each identifier means, where it lives, how tables link, and what code writes what.
+    Column-level schema and privacy: <a href="data-model.html">Data model</a>.
+    Full markdown: <a href="DATA_ATLAS.md">DATA_ATLAS.md</a>.
+  </p>
+
+  <nav class="toc">
+    <strong>On this page</strong>
+    <ul>
+      <li><a href="#ids">ID cheat sheet</a></li>
+      <li><a href="#ls">Browser storage keys</a></li>
+      <li><a href="#flows">Journey flows</a></li>
+      <li><a href="#links">Table links</a></li>
+      <li><a href="#triggers">Write trigger matrix</a></li>
+      <li><a href="#kpis">Counselor KPIs</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="ids">ID cheat sheet</h2>
+  <p class="section-note">Primary keys and foreign keys in Postgres are <strong>UUID</strong> (v4), generated in the browser or server — not student names or emails. <code>pilot_code</code> is plain text entered at intake.</p>
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Format</th><th>Same as</th><th>Stored where</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>visitor_id</code></td><td>UUID</td><td>—</td><td>localStorage + <code>sessions.visitor_id</code></td><td>Same anonymous student across visits on this browser</td></tr>
+      <tr><td><code>session_id</code></td><td>UUID</td><td><code>sessions.id</code></td><td>localStorage + plans, events, check_ins, …</td><td>One engagement episode (new per intake, return, or check-in visit)</td></tr>
+      <tr><td><code>prior_session_id</code></td><td>UUID</td><td>FK → <code>sessions.id</code></td><td>localStorage + <code>sessions.prior_session_id</code></td><td>Earlier session whose plan is being updated</td></tr>
+      <tr><td><code>school_id</code></td><td>UUID</td><td><code>schools.id</code></td><td>Intake draft + <code>sessions.school_id</code></td><td>Institutional rollup key (from pilot code lookup)</td></tr>
+      <tr><td><code>plan.id</code></td><td>UUID</td><td><code>plans.id</code></td><td>DB only</td><td>Internal plan row; app loads by <code>session_id</code> or <code>visitor_id</code></td></tr>
+      <tr><td><code>pilot_code</code></td><td>text</td><td><code>schools.pilot_code</code></td><td>Intake UI only</td><td><code>PILOT-A</code> / <code>DEMO</code> → maps to <code>school_id</code></td></tr>
+      <tr><td><code>grade_level</code></td><td>smallint</td><td>—</td><td>Intake + <code>sessions.grade_level</code></td><td>9–12 for counselor filters</td></tr>
+    </tbody>
+  </table>
+  <p class="section-note"><strong>Rule:</strong> <code>visitor_id</code> = who on this browser. <code>session_id</code> = which visit. New session per return visit — load prior content via <code>visitor_id</code>.</p>
+
+  <h2 id="ls">Browser storage keys (<code>localStorage</code>)</h2>
+  <p class="section-note">The capstone app stores anonymous continuity in the browser’s <code>localStorage</code> API (not in Supabase until a plan is saved). Each row is one key your code reads or writes.</p>
+  <table>
+    <thead><tr><th>Key</th><th>Holds</th><th>Set when</th></tr></thead>
+    <tbody>
+      <tr><td><code>unstuck_visitor_id</code></td><td><code>visitor_id</code></td><td>First Home visit</td></tr>
+      <tr><td><code>unstuck_intake_session_id</code></td><td>Current <code>session_id</code></td><td>Screen 02 or dashboard return</td></tr>
+      <tr><td><code>unstuck_intake_v1</code></td><td>Intake draft JSON</td><td>Each intake screen (not in DB until plan)</td></tr>
+      <tr><td><code>unstuck_last_plan_session_id</code></td><td>Last saved plan session</td><td>After screen 08 persist</td></tr>
+      <tr><td><code>unstuck_prior_session_id</code></td><td>Prior plan session</td><td>Dashboard update flow</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="flows">Journey flows</h2>
+  <h3>New student — first plan</h3>
+  <pre class="mermaid">
+sequenceDiagram
+  participant Home
+  participant LS as localStorage
+  participant S02 as Screen 02
+  participant S08 as Screen 08
+  participant API as generate-plan
+  participant DB as Supabase
+  Home->>LS: visitor_id
+  S02->>LS: new session_id
+  S08->>API: intake + session_meta
+  API->>DB: sessions, plans, events
+  </pre>
+
+  <h3>Return visit — identity model</h3>
+  <pre class="mermaid">
+flowchart LR
+  subgraph browser [Browser]
+    V[visitor_id stable]
+    S[session_id new per visit]
+  end
+  subgraph db [Supabase]
+    SE[sessions]
+    P[plans]
+  end
+  V --> SE
+  S --> SE
+  SE --> P
+  </pre>
+
+  <h2 id="links">Table links</h2>
+  <table>
+    <thead><tr><th>From</th><th>To</th><th>Join</th></tr></thead>
+    <tbody>
+      <tr><td><code>sessions</code></td><td><code>schools</code></td><td><code>school_id</code></td></tr>
+      <tr><td><code>plans</code></td><td><code>sessions</code></td><td><code>session_id</code></td></tr>
+      <tr><td><code>events</code></td><td><code>sessions</code></td><td><code>session_id</code></td></tr>
+      <tr><td><code>check_ins</code></td><td><code>sessions</code></td><td><code>session_id</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="triggers">Write trigger matrix</h2>
+  <table>
+    <thead><tr><th>Trigger</th><th>Writes</th></tr></thead>
+    <tbody>
+      <tr><td>Generate plan (<code>/api/generate-plan</code>)</td><td><code>sessions</code>, <code>intake_snapshots</code>, <code>plans</code>, <code>events</code></td></tr>
+      <tr><td>Check-in submit</td><td><code>check_ins</code>, <code>events</code></td></tr>
+      <tr><td>Resource click</td><td><code>events</code></td></tr>
+      <tr><td>Counselor aggregates</td><td><strong>Read only</strong></td></tr>
+      <tr><td><code>npm run seed:demo</code></td><td>Demo rows (<code>is_demo = true</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="kpis">Counselor KPI definitions</h2>
+  <p class="section-note">Live on <code>/counselor/dashboard</code>. Only sessions with valid <code>visitor_id</code> included.</p>
+  <table>
+    <thead><tr><th>KPI</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td>Students with a plan</td><td>Unique <code>visitor_id</code> with ≥1 completed plan in range</td></tr>
+      <tr><td>New plan sessions</td><td>First completed plan per visitor in range</td></tr>
+      <tr><td>Return plan sessions</td><td>Later completed plan in range</td></tr>
+      <tr><td>Resource engagement %</td><td>Sessions with resource click ÷ plan sessions</td></tr>
+      <tr><td>Contact requests</td><td>Check-in <code>contact_counselor</code> on counselor task</td></tr>
+    </tbody>
+  </table>
+
+  <p class="page-footer">
+    <a href="data-model.html">Data model</a> ·
+    <a href="index.html">Journeys hub</a> ·
+    <a href="DATA_ATLAS.md">Full DATA_ATLAS.md</a> (markdown)
+  </p>
+</main>
+
+<script src="spec-nav.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });</script>
+</body>
+</html>

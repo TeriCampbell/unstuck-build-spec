@@ -6,7 +6,7 @@
   <title>Unstuck — Build specification (hub)</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-spec-page="hub">
 
 <div class="top-bar">
   <div>
@@ -16,19 +16,10 @@
   <div class="meta">Internal reference · not the submitted PRD</div>
 </div>
 
-<nav class="site-nav">
-  <a href="index.html" class="active">Journeys (hub)</a>
-  <a href="fields.html">Fields</a>
-  <a href="prompts.html">Prompts &amp; output</a>
-  <a href="wireframe.html">Wireframe map</a>
-  <a href="workflows.html">Workflows</a>
-  <a href="screening.html">Screening</a>
-  <a href="eval.html">Evaluation</a>
-  <a href="DATA_MODEL.md">Data model</a>
-  <a href="DATA_ATLAS.md">Data atlas</a>
-</nav>
+<nav class="site-nav"></nav>
 
 <main class="main">
+
   <h1>User journeys</h1>
   <p class="lead">
     Filter by journey to see screens in order, what data is collected, and which AI step runs.
@@ -42,6 +33,7 @@
     <strong>Live capstone app:</strong>
     <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">unstuck-app-flame.vercel.app</a>
     · Counselor: <a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a>
+    · <a href="index.html#backlog">Product backlog</a>
     <br><br>
     <strong>Interactive wireframe (PRD Design link):</strong>
     <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Open wireframe (17 screens) →</a>
@@ -197,9 +189,288 @@
     </dl>
   </article>
 
-  <p class="page-footer">Build spec · <a href="eval.html">Evaluation</a> · <a href="workflows.html">Workflows</a> · Schema <a href="DATA_MODEL.md">DATA_MODEL</a></p>
+  <section id="backlog" class="backlog-section">
+    <div class="backlog-header">
+      <h2>Product backlog</h2>
+      <span class="updated">Last updated · May 2026 · Capstone closeout</span>
+    </div>
+    <p class="lead" style="margin-top:0">
+      Capstone closeout priorities on this build-spec hub (not a separate Product Faculty deliverable).
+      Engineering notes live in the private app repo; this table is the readable summary for anyone reviewing the spec site.
+      Full plan: <code>Unstuck_PRD_Draft.md</code> § Capstone closeout plan.
+    </p>
+
+    <div class="backlog-legend">
+      <span><span class="priority priority-gate">GATE</span> Blocks demo video</span>
+      <span><span class="priority priority-p0next">P0-next</span> First post-capstone slice</span>
+      <span><span class="priority priority-p1">P1</span> Before wide pilot</span>
+      <span><span class="priority priority-p2">P2</span> Polish / quality</span>
+      <span><span class="priority priority-p3">P3</span> Post-capstone</span>
+      <span><span class="status status-done">Done</span> Shipped</span>
+      <span><span class="status status-next">Next</span> Active</span>
+    </div>
+
+    <article class="backlog-card-highlight">
+      <h3><span class="priority priority-gate">GATE</span> CAP-03 · Visual design pass (live app)</h3>
+      <p><strong>Blocks the 4-minute video.</strong> Color, typography, layout, components, optional motion on <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">Vercel prototype</a>. Reference: <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">interactive wireframe</a>. Not new features.</p>
+    </article>
+
+    <table class="backlog-table">
+      <caption>Capstone closeout (submission)</caption>
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Item</th>
+          <th class="col-pri">Priority</th>
+          <th class="col-status">Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-id">CAP-01</td>
+          <td>Fix PRD hyperlinks in Google Doc</td>
+          <td><span class="priority priority-p2">P2</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>Insert → Link per <code>PRD_GOOGLE_DOC_LINKS_CHEAT_SHEET.md</code></td>
+        </tr>
+        <tr>
+          <td class="col-id">CAP-02</td>
+          <td>Product backlog board (this section)</td>
+          <td><span class="priority priority-p2">P2</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td>Publish <code>index.html</code> + <code>styles.css</code> to GitHub Pages when ready</td>
+        </tr>
+        <tr>
+          <td class="col-id">CAP-03</td>
+          <td>Visual design pass on live app</td>
+          <td><span class="priority priority-gate">GATE</span></td>
+          <td><span class="status status-next">Next</span></td>
+          <td>Student path + counselor dashboard; then record video</td>
+        </tr>
+        <tr>
+          <td class="col-id">CAP-04</td>
+          <td>Production smoke + N2–N4 eval</td>
+          <td><span class="priority priority-p1">P1</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>After design pass · <code>EVALUATION.md</code></td>
+        </tr>
+        <tr>
+          <td class="col-id">CAP-05</td>
+          <td>Demo script + transcript</td>
+          <td><span class="priority priority-p1">P1</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td><code>Unstuck_Capstone_Video.md</code></td>
+        </tr>
+        <tr>
+          <td class="col-id">CAP-06</td>
+          <td>Record, edit, publish 4-min video</td>
+          <td><span class="priority priority-p1">P1</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>Vimeo unlisted → URL in Google Doc PRD</td>
+        </tr>
+        <tr>
+          <td class="col-id">CAP-07</td>
+          <td>Portfolio / resume / interview narrative</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>After submission · <code>Unstuck_Portfolio_Context.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="backlog-table">
+      <caption>Post-capstone — top priority (V2)</caption>
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Item</th>
+          <th class="col-pri">Priority</th>
+          <th class="col-status">Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-id">P0-next</td>
+          <td>Adult help to set up plan resources (parent / trusted adult)</td>
+          <td><span class="priority priority-p0next">P0-next</span></td>
+          <td><span class="status status-open">Planned</span></td>
+          <td>Per-resource setup on plan (08) + check-in (10); narrate in video, do not ship in capstone</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="backlog-table">
+      <caption>Open — engineering (not blocking capstone)</caption>
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Item</th>
+          <th class="col-pri">Priority</th>
+          <th class="col-status">Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-id">ENG-01</td>
+          <td>Extract-tasks eval fixture</td>
+          <td><span class="priority priority-p1">P1</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>Free text “2 AP exams…” → score extraction JSON</td>
+        </tr>
+        <tr>
+          <td class="col-id">ENG-02</td>
+          <td>Acknowledgment mirrors all confirmed <code>tasks[]</code></td>
+          <td><span class="priority priority-p2">P2</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>Master prompt nudge</td>
+        </tr>
+        <tr>
+          <td class="col-id">ENG-03</td>
+          <td>Align plan-update prompt with master v1.3 + enforcement</td>
+          <td><span class="priority priority-p2">P2</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>Same <code>enforcePlanRules</code> on replan</td>
+        </tr>
+        <tr>
+          <td class="col-id">ENG-04</td>
+          <td>Live preview on screen 05 (optional)</td>
+          <td><span class="priority priority-p2">P2</span></td>
+          <td><span class="status status-open">Open</span></td>
+          <td>Parsed summary before Continue</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="backlog-table">
+      <caption>Vision / V2 (deferred — call out in demo video)</caption>
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Item</th>
+          <th class="col-pri">Priority</th>
+          <th class="col-status">Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-id">V2-01</td>
+          <td>OAuth / email login (screen 01)</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>Capstone: <code>visitor_id</code> + pilot code</td>
+        </tr>
+        <tr>
+          <td class="col-id">V2-02</td>
+          <td>Resend email/SMS check-in tokens</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>Capstone: in-app <code>/intake/check-in</code></td>
+        </tr>
+        <tr>
+          <td class="col-id">V2-03</td>
+          <td>Trusted contact setup (screen 03)</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>Related to P0-next adult setup</td>
+        </tr>
+        <tr>
+          <td class="col-id">V2-04</td>
+          <td>Dedicated plan-update screen (13)</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>Capstone: update via 05 pre-fill</td>
+        </tr>
+        <tr>
+          <td class="col-id">V2-05</td>
+          <td>Counselor resource config (16) + push on contact (17)</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>Screen 15 aggregates shipped</td>
+        </tr>
+        <tr>
+          <td class="col-id">V2-06</td>
+          <td>Production FERPA / legal ops + mandatory reporting workflows</td>
+          <td><span class="priority priority-p3">P3</span></td>
+          <td><span class="status status-open">Deferred</span></td>
+          <td>Documented in PRD; counsel pre-launch</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="backlog-table backlog-done-section">
+      <caption>Done — capstone prototype (Phases 2–4)</caption>
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Item</th>
+          <th class="col-pri">Priority</th>
+          <th class="col-status">Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-id">DONE-01</td>
+          <td>Intake → plan → screening tiers</td>
+          <td><span class="priority priority-done">Shipped</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td>Phase 2b · master v1.3 · screening v1.1</td>
+        </tr>
+        <tr>
+          <td class="col-id">DONE-02</td>
+          <td>Supabase persistence + events</td>
+          <td><span class="priority priority-done">Shipped</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td>2c-db · 2d-events</td>
+        </tr>
+        <tr>
+          <td class="col-id">DONE-03</td>
+          <td>Return dashboard + check-in + progress</td>
+          <td><span class="priority priority-done">Shipped</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td>Phase 3 · <code>visitor_id</code></td>
+        </tr>
+        <tr>
+          <td class="col-id">DONE-04</td>
+          <td>Counselor dashboard (screen 15)</td>
+          <td><span class="priority priority-done">Shipped</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td>Phase 4 · KPIs · Patterns · demo seed</td>
+        </tr>
+        <tr>
+          <td class="col-id">DONE-05</td>
+          <td>Deploy PRD prose (Google Doc)</td>
+          <td><span class="priority priority-done">Shipped</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td><code>DEPLOY_Google_Doc_Paste.md</code></td>
+        </tr>
+        <tr>
+          <td class="col-id">DONE-06</td>
+          <td>Develop + eval suite + build spec pages</td>
+          <td><span class="priority priority-done">Shipped</span></td>
+          <td><span class="status status-done">Done</span></td>
+          <td>fields · prompts · eval · screening</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="backlog-footer-note">
+      <strong>Live artifacts:</strong>
+      <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">Prototype</a> ·
+      <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Wireframe</a> ·
+      <a href="eval.html">Evaluation</a> ·
+      <a href="https://github.com/TeriCampbell/unstuck-app" target="_blank" rel="noopener">App repo</a>
+    </p>
+  </section>
+
+  <p class="page-footer">Build spec · <a href="index.html#backlog">Backlog</a> · <a href="eval.html">Evaluation</a> · <a href="workflows.html">Workflows</a> · Schema <a href="DATA_MODEL.md">DATA_MODEL</a></p>
 </main>
 
+<script src="spec-nav.js"></script>
 <script src="filter.js"></script>
 </body>
 </html>

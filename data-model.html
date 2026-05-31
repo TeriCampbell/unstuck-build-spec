@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unstuck — Data model</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="spec-doc.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body data-spec-page="data-model">
+
+<div class="top-bar">
+  <div>
+    <div class="logo">Unstuck</div>
+    <div class="meta">Build specification · schema &amp; privacy</div>
+  </div>
+  <div class="meta">Canonical: unstuck-app/supabase/migrations</div>
+</div>
+
+<nav class="site-nav"></nav>
+
+<main class="main doc-content">
+  <h1>Data model &amp; persistence</h1>
+  <p class="lead">
+    Supabase schema intent, privacy boundaries, and analytics design for the capstone prototype.
+    For IDs, localStorage, and write triggers, see <a href="data-atlas.html">Data atlas</a>.
+    Full markdown (repo sync): <a href="DATA_MODEL.md">DATA_MODEL.md</a>.
+  </p>
+
+  <nav class="toc">
+    <strong>On this page</strong>
+    <ul>
+      <li><a href="#goals">Goals</a></li>
+      <li><a href="#er">Entity diagram</a></li>
+      <li><a href="#tables">Core tables</a></li>
+      <li><a href="#events">Event catalog</a></li>
+      <li><a href="#access">Access patterns</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="goals">Goals</h2>
+  <ol class="step-list">
+    <li><strong>Student:</strong> Generate and retrieve a plan across visits (<code>visitor_id</code> + new <code>session_id</code> per episode).</li>
+    <li><strong>Product:</strong> Tie structured session content to grade and school for learning and iteration.</li>
+    <li><strong>Counselor value prop:</strong> Aggregates only — not individual student profiles in the UI.</li>
+    <li><strong>Pilot / QA:</strong> Same tables for demo seed (<code>is_demo</code>) and real testers.</li>
+    <li><strong>Events:</strong> Meaningful actions (screens, resource clicks) — no full clickstream or PII in analytics.</li>
+  </ol>
+
+  <h2 id="er">Entity diagram</h2>
+  <p class="section-note">Capstone prototype schema in Supabase (Postgres): schools, sessions, plans, events, and check-ins. Diagram is a static render — use browser zoom (⌘+ / Ctrl+) if you need a closer view.</p>
+  <pre class="mermaid">
+erDiagram
+  schools ||--o{ sessions : has
+  sessions ||--o| intake_snapshots : has
+  sessions ||--o{ plans : generates
+  sessions ||--o{ events : logs
+  sessions ||--o{ check_ins : logs
+  schools {
+    uuid id PK
+    text pilot_code UK
+  }
+  sessions {
+    uuid id PK
+    uuid visitor_id
+    uuid school_id FK
+    smallint grade_level
+    boolean completed_plan
+    boolean is_demo
+  }
+  plans {
+    uuid id PK
+    uuid session_id FK
+    jsonb plan_json
+  }
+  check_ins {
+    uuid id PK
+    uuid session_id FK
+    text task_id
+    text response
+  }
+  </pre>
+
+  <h2 id="tables">Core tables</h2>
+
+  <h3><code>schools</code></h3>
+  <table>
+    <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>uuid PK</td><td>Referenced by <code>sessions.school_id</code></td></tr>
+      <tr><td><code>pilot_code</code></td><td>text UNIQUE</td><td><code>PILOT-A</code>, <code>DEMO</code> at intake</td></tr>
+      <tr><td><code>display_name</code></td><td>text</td><td>Counselor-facing label only</td></tr>
+    </tbody>
+  </table>
+
+  <h3><code>sessions</code></h3>
+  <table>
+    <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>uuid PK</td><td>One row per engagement episode</td></tr>
+      <tr><td><code>visitor_id</code></td><td>uuid</td><td>Links episodes on same browser</td></tr>
+      <tr><td><code>prior_session_id</code></td><td>uuid FK</td><td>Plan-update flows</td></tr>
+      <tr><td><code>school_id</code></td><td>uuid FK</td><td>Required for counselor rollups</td></tr>
+      <tr><td><code>grade_level</code></td><td>smallint</td><td>9–12</td></tr>
+      <tr><td><code>screening_tier_max</code></td><td>text</td><td>Worst tier this session</td></tr>
+      <tr><td><code>completed_plan</code></td><td>boolean</td><td>True after successful generate</td></tr>
+      <tr><td><code>is_demo</code></td><td>boolean</td><td>Seed / QA rows</td></tr>
+    </tbody>
+  </table>
+
+  <h3><code>plans</code> · <code>intake_snapshots</code> · <code>check_ins</code> · <code>events</code></h3>
+  <p class="section-note">
+    <code>intake_snapshots</code>: one JSON payload per session at plan time.
+    <code>plans</code>: <code>plan_json</code> + prompt version.
+    <code>check_ins</code>: structured per-task responses (no free text).
+    <code>events</code>: <code>screen_viewed</code>, <code>plan_generated</code>, <code>resource_link_clicked</code>, etc.
+  </p>
+
+  <h2 id="events">Event catalog (v1)</h2>
+  <table>
+    <thead><tr><th>event_type</th><th>When</th></tr></thead>
+    <tbody>
+      <tr><td><code>screen_viewed</code></td><td>Intake step navigation</td></tr>
+      <tr><td><code>plan_generated</code></td><td>Successful plan on screen 08</td></tr>
+      <tr><td><code>resource_link_clicked</code></td><td>Allowlisted resource URL</td></tr>
+      <tr><td><code>check_in_submitted</code></td><td>After <code>POST /api/submit-check-in</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="access">Access patterns</h2>
+  <table>
+    <thead><tr><th>Actor</th><th>Sees</th></tr></thead>
+    <tbody>
+      <tr><td>Student</td><td>Own plan via <code>visitor_id</code> / <code>session_id</code> — no cross-student</td></tr>
+      <tr><td>Counselor UI</td><td>Aggregates by <code>school_id</code> — no names, no intake free text</td></tr>
+      <tr><td>Builder</td><td>Supabase SQL for pilot debugging</td></tr>
+    </tbody>
+  </table>
+
+  <p class="page-footer">
+    <a href="data-atlas.html">Data atlas</a> ·
+    <a href="index.html">Journeys hub</a> ·
+    <a href="DATA_MODEL.md">Full DATA_MODEL.md</a> (markdown)
+  </p>
+</main>
+
+<script src="spec-nav.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });</script>
+</body>
+</html>
