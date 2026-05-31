@@ -1,6 +1,6 @@
 # Unstuck build specification (unstuck-spec)
 
-Build reference for the Unstuck capstone prototype. **Not** the faculty submission PRD (that is the Google Doc). This site holds fields, prompts, eval cases, workflows, screening detail, and **data model copies** for PRD links.
+Build reference for the Unstuck capstone prototype. **Not** the Product Faculty submission PRD (that is the Google Doc). This site holds fields, prompts, eval cases, workflows, screening detail, data model/atlas HTML, and closeout priorities on the hub.
 
 **Running markdown PRD (Desktop):** `../Unstuck_PRD_Draft.md` · **Capstone log:** `../AI_PM_Capstone_project (2).md` · **Deploy paste for Google Doc:** `../DEPLOY_Google_Doc_Paste.md` · **Portfolio notes:** `../Unstuck_Portfolio_Context.md`
 
@@ -26,7 +26,11 @@ Upload these to refresh GitHub Pages after entry UX + doc batch:
 
 | File | What changed |
 |------|----------------|
-| **`index.html`** | Home step on first-plan journey |
+| **`index.html`** | Journeys hub + closeout table (`#backlog`) at end |
+| **`data-model.html`** | Schema ER diagram + core tables (readable HTML) |
+| **`data-atlas.html`** | ID cheat sheet, flows, KPIs (readable HTML) |
+| **`spec-nav.js`** | Shared navigation on every HTML page |
+| **`styles.css`** · **`spec-doc.css`** | Site + doc page styles |
 | **`wireframe.html`** | Screen 01 capstone Home; paths; truth-order note |
 | **`workflows-first-session.html`** | Home `/` in lead |
 | **`DATA_ATLAS.md`** | Home redirect + `allowHome` (synced from unstuck-app) |

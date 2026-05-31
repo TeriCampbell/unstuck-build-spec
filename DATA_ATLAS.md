@@ -11,21 +11,23 @@
 
 ## ID cheat sheet
 
-| Name | Same as | Stored where | Lifetime | What it means |
-|------|---------|--------------|----------|---------------|
-| **`visitor_id`** | — | Browser `localStorage` + optional `sessions.visitor_id` | Same device/browser until cleared | “Same anonymous student over multiple visits” (D16) |
-| **`session_id`** | `sessions.id` | Browser `localStorage` (current episode) + every child table FK | **One engagement episode** — new intake, return dashboard visit, or check-in visit | Join key for plans, events, intake, check_ins |
-| **`prior_session_id`** | FK → `sessions.id` | Browser `localStorage` during update flow + `sessions.prior_session_id` | One return-update flow | “This episode is updating the plan from that earlier session” |
-| **`school_id`** | `schools.id` | Intake draft + `sessions.school_id` | Per session row | Institutional analytics (pilot school), **not** student identity |
-| **`pilot_code`** | `schools.pilot_code` | Intake draft only (UI) | Per intake form | Student-facing code (`PILOT-A`, `DEMO`) → lookup → `school_id` |
-| **`plan.id`** | `plans.id` | DB only | One row per successful generate | Internal version row; app loads by `session_id` or `visitor_id`, not by `plan.id` |
-| **`grade_level`** | — | Intake draft + `sessions.grade_level` | Per session row | 9–12; segmentation for counselor aggregates |
+**Formats:** `visitor_id`, `session_id`, `school_id`, `prior_session_id`, and `plans.id` are **UUID** (v4) in Postgres. `pilot_code` is **text** (student-facing). `grade_level` is **smallint** (9–12).
+
+| Name | Format | Same as | Stored where | Lifetime | What it means |
+|------|--------|---------|--------------|----------|---------------|
+| **`visitor_id`** | UUID | — | Browser `localStorage` + optional `sessions.visitor_id` | Same device/browser until cleared | “Same anonymous student over multiple visits” (D16) |
+| **`session_id`** | UUID | `sessions.id` | Browser `localStorage` (current episode) + every child table FK | **One engagement episode** — new intake, return dashboard visit, or check-in visit | Join key for plans, events, intake, check_ins |
+| **`prior_session_id`** | UUID | FK → `sessions.id` | Browser `localStorage` during update flow + `sessions.prior_session_id` | One return-update flow | “This episode is updating the plan from that earlier session” |
+| **`school_id`** | UUID | `schools.id` | Intake draft + `sessions.school_id` | Per session row | Institutional analytics (pilot school), **not** student identity |
+| **`pilot_code`** | text | `schools.pilot_code` | Intake draft only (UI) | Per intake form | Student-facing code (`PILOT-A`, `DEMO`) → lookup → `school_id` |
+| **`plan.id`** | UUID | `plans.id` | DB only | One row per successful generate | Internal version row; app loads by `session_id` or `visitor_id`, not by `plan.id` |
+| **`grade_level`** | smallint | — | Intake draft + `sessions.grade_level` | Per session row | 9–12; segmentation for counselor aggregates |
 
 **Rule of thumb:** `visitor_id` = who (on this browser). `session_id` = which visit/episode. Never reuse an old `session_id` for a return visit — create a new one and load prior content via `visitor_id`.
 
 ---
 
-## localStorage map
+## Browser storage keys (localStorage)
 
 | Key | Code constant | Holds | Set when | Read when |
 |-----|---------------|-------|----------|-----------|
