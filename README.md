@@ -10,7 +10,7 @@ Build reference for the Unstuck capstone prototype. **Not** the faculty submissi
 
 Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/TeriCampbell/unstuck-build-spec). Unlisted public URL; disable via repo Settings → Pages → None when capstone review ends.
 
-**Wireframe (separate PRD link):** https://tericampbell.github.io/unstuck_wireframe.html
+**Wireframe (separate PRD link):** https://tericampbell.github.io/unstuck_wireframe.html — file on **TeriCampbell.github.io** (not a repo named `unstuck_wireframe`).
 
 **Live app:** https://unstuck-app-flame.vercel.app/
 
@@ -20,19 +20,20 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 2. Upload changed files to [unstuck-build-spec on GitHub](https://github.com/TeriCampbell/unstuck-build-spec) (browser upload works).
 3. Wait 1–3 minutes; hard-refresh the live URL.
 
-## Upload queue (2026-05-30 — Phase 3–4 sync)
+## Upload queue (2026-05-30 — doc sync)
 
-Upload these to refresh GitHub Pages after counselor dashboard + return/check-in ship:
+Upload these to refresh GitHub Pages after entry UX + doc batch:
 
 | File | What changed |
 |------|----------------|
-| **`index.html`** | Capstone vs V2 journeys; live app links; DATA nav |
-| **`wireframe.html`** | Capstone routes on every screen; check-in path; counselor 15 |
-| **`prompts.html`** | `#capstone-scope` — Phase 3–4 did not change prompt versions |
-| **`eval.html`** | Persistence 001–007; Phase 3–4 production smoke rows |
-| **`fields.html`** | `#api-routes` table including `counselor-aggregates` |
-| **`DATA_MODEL.md`**, **`DATA_ATLAS.md`** | You committed these — no re-upload unless app schema changed |
+| **`index.html`** | Home step on first-plan journey |
+| **`wireframe.html`** | Screen 01 capstone Home; paths; truth-order note |
+| **`workflows-first-session.html`** | Home `/` in lead |
+| **`DATA_ATLAS.md`** | Home redirect + `allowHome` (synced from unstuck-app) |
 | **`README.md`** | This file |
+| **`eval.html`**, **`fields.html`**, **`prompts.html`** | Re-upload only if edited this batch |
+
+**Also upload wireframe:** Desktop `unstuck_wireframe_V5.html` → **TeriCampbell.github.io** as `unstuck_wireframe.html` (screen 01 updated).
 
 **Verify after upload:** On live `eval.html`, search for **“check_ins”** and **“counselor-aggregates”**. Open `DATA_MODEL.md` on GitHub. Counselor card on `index.html` should reference live app `/counselor/dashboard`.
 

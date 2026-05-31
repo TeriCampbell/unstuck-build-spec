@@ -66,7 +66,7 @@ sequenceDiagram
 
 **Current (Phase 3 step 1):** `/intake/return` loads latest completed plan via `POST /api/load-plan` with `visitor_id` (fallback: `last_plan_session_id`).
 
-**Target (Phase 3 Session A step 2+):** Home → dashboard (04) → `startReturnSession(priorSessionId)` → new `session_id` → load plan/intake by `visitor_id`.
+**Production (May 2026):** Open `/` with saved plan → redirect to dashboard (04). Dashboard **Home** link uses `allowHome` to show landing without redirect. Dashboard entry → `startReturnSession(priorPlanSessionId)` → new `session_id` → load plan/intake by `visitor_id`.
 
 ```mermaid
 flowchart LR
@@ -115,7 +115,7 @@ Full column lists: [`DATA_MODEL.md` → Tables](DATA_MODEL.md#tables-v1-minimal)
 
 | Trigger | Route / module | Reads | Writes |
 |---------|----------------|-------|--------|
-| Home load | `Home.tsx` | — | `localStorage`: ensure `visitor_id` |
+| Home load | `Home.tsx` | `last_plan_session_id` | `visitor_id`; redirect to `/dashboard` if plan saved and not `allowHome` / `?stay=1` |
 | Screen 02 submit | client | pilot code → `school_id` | `localStorage`: new `session_id`, draft; event via log-event |
 | Intake navigation | `useScreenViewed` / client | draft | `POST /api/log-event` → may upsert minimal `sessions` + `events` |
 | Generate plan | `POST /api/generate-plan` | intake JSON, `session_meta` | `sessions` (full row), `intake_snapshots`, `plans`, `events` |
