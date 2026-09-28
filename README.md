@@ -20,22 +20,14 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 2. Upload changed files to [unstuck-build-spec on GitHub](https://github.com/TeriCampbell/unstuck-build-spec) (browser upload works).
 3. Wait 1–3 minutes; hard-refresh the live URL.
 
-## Upload queue (2026-05-30 — doc sync)
-
-Upload these to refresh GitHub Pages after entry UX + doc batch:
+## Upload queue (2026-09-27 — eval + routing)
 
 | File | What changed |
 |------|----------------|
-| **`index.html`** | Journeys hub + closeout table (`#backlog`) at end |
-| **`data-model.html`** | Schema ER diagram + core tables (readable HTML) |
-| **`data-atlas.html`** | ID cheat sheet, flows, KPIs (readable HTML) |
-| **`spec-nav.js`** | Shared navigation on every HTML page |
-| **`styles.css`** · **`spec-doc.css`** | Site + doc page styles |
-| **`wireframe.html`** | Screen 01 capstone Home; paths; truth-order note |
-| **`workflows-first-session.html`** | Home `/` in lead |
-| **`DATA_ATLAS.md`** | Home redirect + `allowHome` (synced from unstuck-app) |
-| **`README.md`** | This file |
-| **`eval.html`**, **`fields.html`**, **`prompts.html`** | Re-upload only if edited this batch |
+| **`eval.html`** | Model routing section; route-1 results (N2–N4, T1, E2 Pass); models + smoke table updated |
+| **`README.md`** | This upload note |
+
+Prior May 30 doc sync is already on Pages; re-upload other files only if edited locally.
 
 **Also upload wireframe:** Desktop `unstuck_wireframe_V5.html` → **TeriCampbell.github.io** as `unstuck_wireframe.html` (screen 01 updated).
 
