@@ -1,6 +1,8 @@
 # Unstuck build specification (unstuck-spec)
 
-Build reference for the Unstuck capstone prototype. **Not** the Product Faculty submission PRD (that is the Google Doc). This site holds fields, prompts, eval cases, workflows, screening detail, data model/atlas HTML, and closeout priorities on the hub.
+Build reference for the Unstuck prototype: **user journeys**, fields, prompts, eval cases, workflows, screening, and data model/atlas.
+
+**Not** the Product Faculty submission PRD (that is the Google Doc).
 
 **Running markdown PRD (Desktop):** `../Unstuck_PRD_Draft.md` · **Capstone log:** `../AI_PM_Capstone_project (2).md` · **Deploy paste for Google Doc:** `../DEPLOY_Google_Doc_Paste.md` · **Portfolio notes:** `../Unstuck_Portfolio_Context.md`
 
@@ -8,11 +10,13 @@ Build reference for the Unstuck capstone prototype. **Not** the Product Faculty 
 
 **https://tericampbell.github.io/unstuck-build-spec/index.html**
 
-Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/TeriCampbell/unstuck-build-spec). Unlisted public URL; disable via repo Settings → Pages → None when capstone review ends.
+Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/TeriCampbell/unstuck-build-spec). Unlisted public URL.
 
 **Wireframe (separate PRD link):** https://tericampbell.github.io/unstuck_wireframe.html — file on **TeriCampbell.github.io** (not a repo named `unstuck_wireframe`).
 
-**Live app:** https://unstuck-app-flame.vercel.app/
+**Live app:** https://unstuck-app-flame.vercel.app/ — entry hub (student / counselor). Faculty screening demo: `/demo` (linked from this site, not the app hub).
+
+**Backlog tracking:** [Linear · tcampbell](https://linear.app/tcampbell) — `index.html#backlog` is an archive snapshot.
 
 ## Edit locally
 
@@ -20,26 +24,28 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 2. Upload changed files to [unstuck-build-spec on GitHub](https://github.com/TeriCampbell/unstuck-build-spec) (browser upload works).
 3. Wait 1–3 minutes; hard-refresh the live URL.
 
-## Upload queue (2026-09-27 — eval + routing)
+## Upload queue (2026-09-28 — journeys + accuracy pass)
 
 | File | What changed |
 |------|----------------|
-| **`eval.html`** | Model routing section; route-1 results (N2–N4, T1, E2 Pass); models + smoke table updated |
-| **`README.md`** | This upload note |
+| **`index.html`** | Journey hub purpose; entry `/` + `/home`; `/demo` for faculty; backlog Linear-first, CAP removed |
+| **`wireframe.html`** | Entry hub 00 + `/home`; Live labels; check-in / paths |
+| **`fields.html`** | Check-in counselor contact not per-task; barrier text = V2 |
+| **`workflows.html`** | Live prototype map; entry hub wording |
+| **`workflows-first-session.html`** | Hub → `/home`; Haiku/Sonnet routing |
+| **`workflows-checkin-replan.html`** | Shipped vs V2; page-level counselor contact |
+| **`prompts.html`** | Architecture + model tier = Haiku-first routing |
+| **`data-atlas.html`** / **`DATA_ATLAS.md`** | Contact requests = page-level → `counselor_contact` row |
+| **`spec-nav.js`** | Nav label “Journeys” |
+| **`README.md`** | This note |
 
-Prior May 30 doc sync is already on Pages; re-upload other files only if edited locally.
-
-**Also upload wireframe:** Desktop `unstuck_wireframe_V5.html` → **TeriCampbell.github.io** as `unstuck_wireframe.html` (screen 01 updated).
-
-**Verify after upload:** On live `eval.html`, search for **“check_ins”** and **“counselor-aggregates”**. Open `DATA_MODEL.md` on GitHub. Counselor card on `index.html` should reference live app `/counselor/dashboard`.
-
-Other pages (`prompts.html`, `screening.html`, PNGs) — upload only if you edited them.
+**Verify after upload:** Live `index.html` mentions entry hub and `/demo`. `wireframe.html` has screen 00. Check-in fields no longer list contact counselor as a per-task enum.
 
 ## Pages
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Journey hub |
+| `index.html` | **User journeys** — filterable map of student + counselor flows; backlog archive |
 | `fields.html` | Required / optional inputs + API routes |
 | `prompts.html` | Prompt architecture, JSON shapes, **production v1 text** (`#production-prompts`) |
 | `wireframe.html` | Screen map (links to live wireframe) |

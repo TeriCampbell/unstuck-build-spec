@@ -36,6 +36,7 @@
 | `unstuck_intake_v1` | `INTAKE_STORAGE_KEY` | Full intake draft JSON | Each intake screen save | Multi-step intake UI only (not in Supabase until plan) |
 | `unstuck_intake_visit_complete` | `INTAKE_VISIT_COMPLETE_KEY` | `"1"` if plan finished | After successful plan (screen 08) | Screen 02 reset logic |
 | `unstuck_last_plan_session_id` | `LAST_PLAN_SESSION_KEY` | Last saved plan’s `session_id` | After successful persist (screen 08) | Home “see saved plan” fallback; legacy return path |
+| `unstuck_closed_plan_session_ids` | `CLOSED_PLAN_SESSIONS_KEY` | JSON array of closed plan `session_id`s | Screen 11 close-out (`closeOutPlanEpisode`) | Skip auto-load of closed episodes; keep `visitor_id` (TCA-5) |
 | `unstuck_prior_session_id` | `PRIOR_SESSION_KEY` | Prior plan `session_id` | Dashboard return entry or update flow | Pre-fill situation (05); sent as `prior_session_id` on regenerate |
 
 **Source:** `src/lib/sessionId.ts`, `src/intake/types.ts` (`INTAKE_STORAGE_KEY`).
@@ -201,7 +202,7 @@ Logic: `lib/counselorKpiPeriod.mjs` + `lib/counselorAggregates.mjs`. UI: `/couns
 | **New plan sessions** | First completed plan per visitor in the date range |
 | **Return plan sessions** | Later completed plan in range (`prior_session_id` or not the visitor's first plan) |
 | **Resource engagement %** | Plan sessions in range with ≥1 `resource_link_clicked` ÷ plan sessions with `plan_generated` |
-| **Contact requests** | `check_ins` in range where `task_id = counselor_contact` and `response = contact_counselor` |
+| **Contact requests** | Page-level check-in control → `check_ins` in range where `task_id = counselor_contact` and `response = contact_counselor` |
 
 **Categories:** Per situation tag, `session_count` and `percent` of plan sessions in range (multi-select; percents can sum above 100%).
 

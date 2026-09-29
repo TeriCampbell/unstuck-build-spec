@@ -112,10 +112,11 @@
     <div class="step"><strong>Inappropriate tier?</strong> → Stop. No plan prompt. Free text disabled for account.</div>
     <div class="step"><strong>Intake screen 05 with free text?</strong> → <span class="pill pill-light">Lighter Claude</span> extract-tasks (structured <code>tasks[]</code> for screen 06; checkbox fallback if empty)</div>
     <div class="step"><strong>Which journey?</strong>
-      <br>· First plan after intake → <span class="pill pill-sonnet">Sonnet</span> master prompt → post-parse <code>enforcePlanRules</code>
-      <br>· Dashboard “next step” → <span class="pill pill-sonnet">Sonnet</span> plan continuation
-      <br>· Dashboard “plan update” → screening if text → <span class="pill pill-sonnet">Sonnet</span> plan update
-      <br>· After check-in failures → <em>V2:</em> screening + Sonnet adaptive replanning (not wired in capstone app)
+      <br>· First plan after intake → <span class="pill pill-light">Haiku</span> draft (+ <span class="pill pill-sonnet">Sonnet</span> refine if escalate) → post-parse <code>enforcePlanRules</code>
+      <br>· Dashboard “next step” → <em>V2:</em> continuation prompt
+      <br>· Dashboard “plan update” → screening if text → same plan route as first plan (pre-filled intake)
+      <br>· After check-in failures → <em>V2:</em> screening + adaptive replanning
+      <br>· Detail: <a href="eval.html#routing">Model routing (Sept 2026)</a>
     </div>
     <div class="step active"><strong>UI layer</strong> applies tier rules (elevated/crisis may gate plan delivery), renders JSON, include/exclude/defer controls</div>
   </div>
@@ -144,7 +145,7 @@
       </tr>
       <tr>
         <td>Model tier</td>
-        <td>Lighter model: screening only. Sonnet: all plan generation and replanning</td>
+        <td>Haiku: screening, extract-tasks, plan draft / fast path. Sonnet: refine on escalate (<code>plan-refine-v1.0</code>). See <a href="eval.html#routing">routing</a>.</td>
       </tr>
     </tbody>
   </table>

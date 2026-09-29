@@ -23,7 +23,7 @@
   <h1>Workflows</h1>
   <p class="lead">
     How Unstuck works end to end for students and counselors. Use the tabs for journey-specific views;
-    this page shows the integrated map used in the PRD Design section.
+    this page shows the integrated map.
   </p>
 
   <nav class="workflow-tabs" aria-label="Workflow views">
@@ -34,7 +34,7 @@
 
   <h2>Integrated student and counselor workflow</h2>
   <p class="section-note">
-    Primary capstone figure: Matt and Ms. Smith in parallel, with one cross-lane connection when the student requests counselor support.
+    Primary figure: Matt and Ms. Smith in parallel, with one cross-lane connection when the student requests counselor support.
   </p>
 
   <figure>
@@ -50,10 +50,10 @@
       <h3>Matt — student</h3>
       <p class="role">Primary end user</p>
       <ol>
-        <li>Discovers Unstuck; creates account and optional trusted contact</li>
+        <li>Discovers Unstuck via entry hub; starts as student (pilot code + <code>visitor_id</code>)</li>
         <li>First plan via structured intake + AI plan generation</li>
-        <li>Email check-ins, replan when behind, plan update when life changes</li>
-        <li>Optionally notifies counselor (name + flag only)</li>
+        <li>In-app check-ins; plan update when life changes; email check-in / adaptive replan — V2</li>
+        <li>Optionally requests counselor contact (counted on dashboard; push notify — V2)</li>
       </ol>
       <p style="font-size:0.82rem;margin-top:12px;">
         Detail: <a href="workflows-first-session.html">First session</a> ·
@@ -77,10 +77,10 @@
     Ms. Smith receives name + support flag, not intake or plan content, unless the student separately shares under trusted-contact permissions.
   </div>
 
-  <h2>Map to prototype and demo</h2>
+  <h2>Map to live prototype</h2>
   <ul style="margin:0 0 16px 1.2rem;font-size:0.9rem;">
-    <li><strong>Build:</strong> Matt first session + at least one check-in/replan cycle</li>
-    <li><strong>Demo:</strong> Integrated story with brief counselor dashboard (screens 15–17, demo data)</li>
+    <li><strong>Live:</strong> Entry hub → student first session + check-in; counselor dashboard (screen 15, DEMO data)</li>
+    <li><strong>Faculty eval:</strong> <a href="https://unstuck-app-flame.vercel.app/demo">/demo</a> screening cases (linked from build-spec)</li>
     <li><strong>Wireframe:</strong> <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Interactive v5</a> · <a href="wireframe.html">Screen map</a></li>
   </ul>
 

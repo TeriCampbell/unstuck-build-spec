@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unstuck — Build specification (hub)</title>
+  <title>Unstuck — User journeys</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-spec-page="hub">
@@ -11,9 +11,9 @@
 <div class="top-bar">
   <div>
     <div class="logo">Unstuck</div>
-    <div class="meta">Build specification · May 2026</div>
+    <div class="meta">Build specification · Sept 2026</div>
   </div>
-  <div class="meta">Internal reference · not the submitted PRD</div>
+  <div class="meta">Product &amp; system reference · not the submitted PRD</div>
 </div>
 
 <nav class="site-nav"></nav>
@@ -22,22 +22,25 @@
 
   <h1>User journeys</h1>
   <p class="lead">
-    Filter by journey to see screens in order, what data is collected, and which AI step runs.
-    Open <a href="fields.html">Fields</a> for full required/optional tables, or other pages for depth.
+    How Unstuck works for students and counselors: screens in order, what data is collected, and which AI step runs.
+    Use the filters below, then open <a href="fields.html">Fields</a>, <a href="prompts.html">Prompts</a>, or other nav pages for depth.
   </p>
 
   <div class="notice">
-    <strong>How to use:</strong> Double-click this file (<code>index.html</code>) to open in a browser.
-    One entry point; other pages are linked from the nav bar.
-    <br><br>
-    <strong>Live capstone app:</strong>
+    <strong>Live app:</strong>
     <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">unstuck-app-flame.vercel.app</a>
-    · Counselor: <a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a>
-    · <a href="index.html#backlog">Product backlog</a>
+    (entry hub: student or counselor) ·
+    <a href="https://unstuck-app-flame.vercel.app/home" rel="noreferrer">/home</a> ·
+    <a href="https://unstuck-app-flame.vercel.app/counselor/dashboard" rel="noreferrer">/counselor/dashboard</a>
     <br><br>
-    <strong>Interactive wireframe (PRD Design link):</strong>
-    <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Open wireframe (17 screens) →</a>
-    · <a href="wireframe.html">Screen map</a> (capstone routes vs V2 on this site)
+    <strong>Faculty screening demo:</strong>
+    <a href="https://unstuck-app-flame.vercel.app/demo" rel="noreferrer">/demo</a>
+    — frozen cases T1 / N2–N4 against the live plan API (tier gating). Not a student or counselor product path.
+    <br><br>
+    <strong>Wireframe:</strong>
+    <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Interactive wireframe (17 screens)</a>
+    · <a href="wireframe.html">Screen map</a> on this site ·
+    <a href="index.html#backlog">Product backlog archive</a>
   </div>
 
   <h2>Filter by journey</h2>
@@ -58,17 +61,18 @@
     <div class="journey-id">journey: first-plan</div>
     <span class="tag tag-green">Master prompt</span>
     <span class="tag tag-amber">Distress screening</span>
-    <span class="tag tag-gray">Capstone: /intake → plan</span>
+    <span class="tag tag-gray">Live: / → /home → intake → plan</span>
     <ol class="step-list">
-      <li><strong>01</strong> Home (<code>/</code>) — welcome, intake CTA, toolkit copy; return visits redirect to <code>/dashboard</code></li>
+      <li><strong>00</strong> Entry hub (<code>/</code>) — choose student or counselor; build-spec link separate</li>
+      <li><strong>01</strong> Student home (<code>/home</code>) — welcome, intake CTA, toolkit copy; with a saved plan, redirects to <code>/dashboard</code> unless <code>allowHome</code> / <code>?stay=1</code></li>
       <li><strong>02</strong> Grade + pilot code (<code>PILOT-A</code> / <code>DEMO</code>); <code>visitor_id</code> — not full OAuth (V2)</li>
-      <li><strong>03</strong> Trusted contact — <em>V2 / not in capstone app</em></li>
+      <li><strong>03</strong> Trusted contact — <em>V2 / not in live app</em></li>
       <li><strong>05–07</strong> Situation → tasks → clarify; optional screened free text on 05</li>
       <li><strong>08</strong> Plan delivery — Supabase save + events on success</li>
     </ol>
     <dl class="detail-grid">
       <dt>AI prompt</dt>
-      <dd>Distress screening (Haiku) → Master prompt (Sonnet) if tier allows</dd>
+      <dd>Distress screening (Haiku) → plan draft (Haiku) → Sonnet refine when route escalates; see <a href="eval.html#routing">model routing</a></dd>
       <dt>Required inputs</dt>
       <dd><a href="fields.html#master">See master prompt table</a></dd>
       <dt>Workflow visual</dt>
@@ -88,7 +92,7 @@
     </ol>
     <dl class="detail-grid">
       <dt>Why V2</dt>
-      <dd>Second Sonnet path deferred for demo scope; plan JSON already surfaces Today focus</dd>
+      <dd>Separate continuation LLM deferred; plan JSON already surfaces Today focus</dd>
     </dl>
   </article>
 
@@ -107,7 +111,7 @@
     </ol>
     <dl class="detail-grid">
       <dt>AI prompt</dt>
-      <dd>Screening if free text → Master / plan update (Sonnet)</dd>
+      <dd>Screening if free text → plan draft / update (Haiku; Sonnet refine on escalate)</dd>
       <dt>Required inputs</dt>
       <dd><a href="fields.html#update">Plan update table</a></dd>
     </dl>
@@ -121,14 +125,14 @@
     <span class="tag tag-gray">Adaptive replan — V2</span>
     <span class="tag tag-gray">Wireframe 10, 11</span>
     <ol class="step-list">
-      <li><strong>Capstone (shipped):</strong> <code>/dashboard</code> → <code>/intake/check-in</code> → <code>/intake/progress</code>; <code>POST /api/submit-check-in</code> → <code>check_ins</code></li>
-      <li>Per task: yes / no / in progress / attempted but could not complete / contact counselor (aggregate KPI on screen 15; no counselor push — V2)</li>
+      <li><strong>Shipped:</strong> <code>/dashboard</code> → <code>/intake/check-in</code> → <code>/intake/progress</code>; <code>POST /api/submit-check-in</code> → <code>check_ins</code></li>
+      <li>Per task: yes / no / in progress / attempted but could not complete. Page-level: &ldquo;I want to contact my school counselor&rdquo; (counted on screen 15; counselor push — V2)</li>
       <li><strong>Pilot without email:</strong> message with <a href="https://unstuck-app-flame.vercel.app/intake/check-in">/intake/check-in</a> (pushed check-in). <code>/dashboard</code> is for return visits, not the reminder link. Same browser as plan generate (<code>visitor_id</code>).</li>
       <li><strong>V2:</strong> Resend email/SMS with <code>/checkin?token=…</code>; optional 140-char barrier text; adaptive replan LLM after failed tasks</li>
     </ol>
     <dl class="detail-grid">
       <dt>AI prompt</dt>
-      <dd>Capstone: structured check-in only. V2: screening on barrier text → adaptive replan (Sonnet)</dd>
+      <dd>Structured check-in only today. V2: screening on barrier text → adaptive replan</dd>
       <dt>Required inputs</dt>
       <dd><a href="fields.html#replan">Replan table</a></dd>
       <dt>Workflow visual</dt>
@@ -169,13 +173,13 @@
 
   <!-- Counselor -->
   <article class="journey-card" data-journey="counselor all">
-    <div class="journey-title">Counselor (capstone prototype)</div>
+    <div class="journey-title">Counselor (live prototype)</div>
     <div class="journey-id">journey: counselor</div>
     <span class="tag tag-green">Screen 15 — live SQL</span>
     <span class="tag tag-gray">Screens 16–17 — V2</span>
     <ol class="step-list">
       <li><strong>15 (built):</strong> Live aggregates from Supabase via <code>POST /api/counselor-aggregates</code> — partitioned by <code>school_id</code> (pilot code). Filters: grade, date range, day of week. KPIs, sessions by category, resource engagement, <strong>Patterns &amp; Actionable Insights</strong> (rule-based).</li>
-      <li><strong>Demo volume:</strong> <code>npm run seed:demo</code> plus <code>DEMO</code> pilot code — representative data for video; same code path as real pilot rows.</li>
+      <li><strong>Demo volume:</strong> <code>npm run seed:demo</code> plus <code>DEMO</code> pilot code — representative aggregates; same code path as real pilot rows. App entry: counselor path on <code>/</code>.</li>
       <li><strong>16</strong> Resource configuration UI — V2</li>
       <li><strong>17</strong> Counselor push notification on contact request — V2 (contact count on dashboard today)</li>
     </ol>
@@ -192,7 +196,7 @@
   <section id="backlog" class="backlog-section">
     <div class="backlog-header">
       <h2>Product backlog</h2>
-      <span class="updated">Last updated · Sept 2026 · Capstone closeout archive</span>
+      <span class="updated">Last updated · Sept 2026 · Archive snapshot</span>
     </div>
 
     <aside class="backlog-info" role="note">
@@ -204,99 +208,28 @@
         </svg>
       </span>
       <p>
-        Backlog items have moved to
+        Day-to-day backlog tracking lives in
         <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Linear</a>.
-        Tables below are the capstone closeout archive for this build-spec; day-to-day status lives in Linear.
+        Tables below are a readable archive of product priorities for this build-spec (status may lag Linear).
       </p>
     </aside>
 
     <p class="lead" style="margin-top:0">
-      Capstone closeout priorities on this build-spec hub (not a separate Product Faculty deliverable).
-      Engineering notes live in the private app repo; this table is the readable summary for anyone reviewing the spec site.
-      Full plan: <code>Unstuck_PRD_Draft.md</code> § Capstone closeout plan.
+      Open and deferred product work for the live prototype. Engineering detail also lives in the app repo
+      (<code>BACKLOG.md</code>). Prefer Linear for current status.
     </p>
 
     <div class="backlog-legend">
-      <span><span class="priority priority-gate">GATE</span> Blocks demo video</span>
-      <span><span class="priority priority-p0next">P0-next</span> First post-capstone slice</span>
+      <span><span class="priority priority-p0next">P0-next</span> First post-MVP slice</span>
       <span><span class="priority priority-p1">P1</span> Before wide pilot</span>
       <span><span class="priority priority-p2">P2</span> Polish / quality</span>
-      <span><span class="priority priority-p3">P3</span> Post-capstone</span>
+      <span><span class="priority priority-p3">P3</span> Later / vision</span>
       <span><span class="status status-done">Done</span> Shipped</span>
       <span><span class="status status-next">Next</span> Active</span>
     </div>
 
-    <article class="backlog-card-highlight">
-      <h3><span class="priority priority-gate">GATE</span> CAP-03 · Visual design pass (live app)</h3>
-      <p><strong>Blocks the 4-minute video.</strong> Color, typography, layout, components, optional motion on <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">Vercel prototype</a>. Reference: <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">interactive wireframe</a>. Not new features.</p>
-    </article>
-
     <table class="backlog-table">
-      <caption>Capstone closeout (submission)</caption>
-      <thead>
-        <tr>
-          <th class="col-id">ID</th>
-          <th>Item</th>
-          <th class="col-pri">Priority</th>
-          <th class="col-status">Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-id">CAP-01</td>
-          <td>Fix PRD hyperlinks in Google Doc</td>
-          <td><span class="priority priority-p2">P2</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>Insert → Link per <code>PRD_GOOGLE_DOC_LINKS_CHEAT_SHEET.md</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">CAP-02</td>
-          <td>Product backlog board (this section)</td>
-          <td><span class="priority priority-p2">P2</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td>Publish <code>index.html</code> + <code>styles.css</code> to GitHub Pages when ready</td>
-        </tr>
-        <tr>
-          <td class="col-id">CAP-03</td>
-          <td>Visual design pass on live app</td>
-          <td><span class="priority priority-gate">GATE</span></td>
-          <td><span class="status status-next">Next</span></td>
-          <td>Student path + counselor dashboard; then record video</td>
-        </tr>
-        <tr>
-          <td class="col-id">CAP-04</td>
-          <td>Production smoke + N2–N4 eval</td>
-          <td><span class="priority priority-p1">P1</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>After design pass · <code>EVALUATION.md</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">CAP-05</td>
-          <td>Demo script + transcript</td>
-          <td><span class="priority priority-p1">P1</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td><code>Unstuck_Capstone_Video.md</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">CAP-06</td>
-          <td>Record, edit, publish 4-min video</td>
-          <td><span class="priority priority-p1">P1</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>Unlisted video URL → Google Doc PRD</td>
-        </tr>
-        <tr>
-          <td class="col-id">CAP-07</td>
-          <td>Portfolio / resume / interview narrative</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>After submission · <code>Unstuck_Portfolio_Context.md</code></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="backlog-table">
-      <caption>Post-capstone — top priority (V2)</caption>
+      <caption>Top priority (V2)</caption>
       <thead>
         <tr>
           <th class="col-id">ID</th>
@@ -312,13 +245,13 @@
           <td>Adult help to set up plan resources (parent / trusted adult)</td>
           <td><span class="priority priority-p0next">P0-next</span></td>
           <td><span class="status status-open">Planned</span></td>
-          <td>Per-resource setup on plan (08) + check-in (10); narrate in video, do not ship in capstone</td>
+          <td>Per-resource setup on plan (08) + check-in (10); see Linear TCA-19</td>
         </tr>
       </tbody>
     </table>
 
     <table class="backlog-table">
-      <caption>Open — engineering (not blocking capstone)</caption>
+      <caption>Open — engineering</caption>
       <thead>
         <tr>
           <th class="col-id">ID</th>
@@ -361,7 +294,7 @@
     </table>
 
     <table class="backlog-table">
-      <caption>Vision / V2 (deferred — call out in demo video)</caption>
+      <caption>Vision / V2 (deferred)</caption>
       <thead>
         <tr>
           <th class="col-id">ID</th>
@@ -377,14 +310,14 @@
           <td>OAuth / email login (screen 01)</td>
           <td><span class="priority priority-p3">P3</span></td>
           <td><span class="status status-open">Deferred</span></td>
-          <td>Capstone: <code>visitor_id</code> + pilot code</td>
+          <td>Today: <code>visitor_id</code> + pilot code; entry hub at <code>/</code></td>
         </tr>
         <tr>
           <td class="col-id">V2-02</td>
           <td>Resend email/SMS check-in tokens</td>
           <td><span class="priority priority-p3">P3</span></td>
           <td><span class="status status-open">Deferred</span></td>
-          <td>Capstone: in-app <code>/intake/check-in</code></td>
+          <td>Today: in-app <code>/intake/check-in</code></td>
         </tr>
         <tr>
           <td class="col-id">V2-03</td>
@@ -398,7 +331,7 @@
           <td>Dedicated plan-update screen (13)</td>
           <td><span class="priority priority-p3">P3</span></td>
           <td><span class="status status-open">Deferred</span></td>
-          <td>Capstone: update via 05 pre-fill</td>
+          <td>Today: update via 05 pre-fill</td>
         </tr>
         <tr>
           <td class="col-id">V2-05</td>
@@ -412,13 +345,13 @@
           <td>Production FERPA / legal ops + mandatory reporting workflows</td>
           <td><span class="priority priority-p3">P3</span></td>
           <td><span class="status status-open">Deferred</span></td>
-          <td>Documented in PRD; counsel pre-launch</td>
+          <td>Documented for launch readiness; counsel pre-launch</td>
         </tr>
       </tbody>
     </table>
 
     <table class="backlog-table backlog-done-section">
-      <caption>Done — capstone prototype (Phases 2–4)</caption>
+      <caption>Done — prototype (Phases 2–4)</caption>
       <thead>
         <tr>
           <th class="col-id">ID</th>
@@ -434,7 +367,7 @@
           <td>Intake → plan → screening tiers</td>
           <td><span class="priority priority-done">Shipped</span></td>
           <td><span class="status status-done">Done</span></td>
-          <td>Phase 2b · master v1.3 · screening v1.1</td>
+          <td>Phase 2b · master v1.3 · screening v1.1 · Haiku-first routing</td>
         </tr>
         <tr>
           <td class="col-id">DONE-02</td>
@@ -479,7 +412,8 @@
       <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">Prototype</a> ·
       <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Wireframe</a> ·
       <a href="eval.html">Evaluation</a> ·
-      <a href="https://github.com/TeriCampbell/unstuck-app" target="_blank" rel="noopener">App repo</a>
+      <a href="https://github.com/TeriCampbell/unstuck-app" target="_blank" rel="noopener">App repo</a> ·
+      <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Linear</a>
     </p>
   </section>
 

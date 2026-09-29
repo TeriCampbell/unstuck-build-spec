@@ -22,8 +22,10 @@
 <main class="main">
   <h1>Student first session</h1>
   <p class="lead">
-    New user path from Home (/) through first plan delivery. Skips dashboard (screen 04) until a later return visit; then opening / redirects to dashboard.
-    AI: screening (if text) → master prompt (Sonnet).
+    New user path from entry hub → student home → first plan. Dashboard (screen 04) appears on later return visits
+    (<code>/home</code> redirects when a plan is saved).
+    AI: screening (if text) → Haiku plan draft → Sonnet refine when route escalates
+    (<a href="eval.html#routing">model routing</a>).
   </p>
 
   <nav class="workflow-tabs" aria-label="Workflow views">
@@ -42,9 +44,18 @@
 
     <div class="flow-step">
       <div class="flow-box flow-ui">
+        <strong>Entry hub</strong>
+        <code>/</code>
+        <span class="sub">Choose student or counselor</span>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+
+    <div class="flow-step">
+      <div class="flow-box flow-ui">
         <strong>Screen 01</strong>
-        Home / landing
-        <span class="sub">Sign up or log in</span>
+        Student home (<code>/home</code>)
+        <span class="sub">Welcome + intake CTA (no OAuth in live app)</span>
       </div>
     </div>
     <div class="flow-arrow">↓</div>
@@ -52,19 +63,13 @@
     <div class="flow-step">
       <div class="flow-box flow-ui">
         <strong>Screen 02</strong>
-        Account + age gate
-        <span class="sub">Grade level captured → used by AI</span>
+        Grade + pilot school
+        <span class="sub"><code>visitor_id</code> · DEMO / PILOT-A</span>
       </div>
     </div>
     <div class="flow-arrow">↓</div>
 
-    <div class="flow-step">
-      <div class="flow-box flow-ui">
-        <strong>Screen 03</strong>
-        Trusted contact (optional)
-        <span class="sub">Permissions for sharing; skippable</span>
-      </div>
-    </div>
+    <div class="flow-optional">V2: trusted contact (screen 03) — skipped in live app</div>
     <div class="flow-arrow">↓</div>
     <div class="flow-optional">New users go directly to situation — not dashboard</div>
     <div class="flow-arrow">↓</div>
@@ -110,8 +115,8 @@
     <div class="flow-step">
       <div class="flow-box flow-ai">
         <strong>AI</strong>
-        Master prompt (Sonnet)
-        <span class="sub">Acknowledgment + full-scope plan + next 7 days</span>
+        Plan generation
+        <span class="sub">Haiku draft → Sonnet refine if escalate · then enforcePlanRules</span>
       </div>
     </div>
     <div class="flow-arrow">↓</div>

@@ -5,7 +5,7 @@
 (function () {
   const page = document.body.getAttribute('data-spec-page') || '';
   const links = [
-    ['index.html', 'Journeys (hub)', 'hub'],
+    ['index.html', 'Journeys', 'hub'],
     ['fields.html', 'Fields', 'fields'],
     ['prompts.html', 'Prompts &amp; output', 'prompts'],
     ['wireframe.html', 'Wireframe map', 'wireframe'],

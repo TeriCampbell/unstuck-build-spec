@@ -67,6 +67,7 @@
       <tr><td><code>unstuck_intake_session_id</code></td><td>Current <code>session_id</code></td><td>Screen 02 or dashboard return</td></tr>
       <tr><td><code>unstuck_intake_v1</code></td><td>Intake draft JSON</td><td>Each intake screen (not in DB until plan)</td></tr>
       <tr><td><code>unstuck_last_plan_session_id</code></td><td>Last saved plan session</td><td>After screen 08 persist</td></tr>
+      <tr><td><code>unstuck_closed_plan_session_ids</code></td><td>Closed plan episode session_ids (JSON array)</td><td>Screen 11 close-out</td></tr>
       <tr><td><code>unstuck_prior_session_id</code></td><td>Prior plan session</td><td>Dashboard update flow</td></tr>
     </tbody>
   </table>
@@ -135,7 +136,7 @@ flowchart LR
       <tr><td>New plan sessions</td><td>First completed plan per visitor in range</td></tr>
       <tr><td>Return plan sessions</td><td>Later completed plan in range</td></tr>
       <tr><td>Resource engagement %</td><td>Sessions with resource click ÷ plan sessions</td></tr>
-      <tr><td>Contact requests</td><td>Check-in <code>contact_counselor</code> on counselor task</td></tr>
+      <tr><td>Contact requests</td><td>Page-level check-in counselor control → <code>check_ins</code> row <code>task_id = counselor_contact</code>, <code>response = contact_counselor</code></td></tr>
     </tbody>
   </table>
 

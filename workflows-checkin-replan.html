@@ -22,8 +22,10 @@
 <main class="main">
   <h1>Check-in and replan loop</h1>
   <p class="lead">
-    How Unstuck stays current after the first plan: email check-in, student-reported progress, then adaptive replan when needed.
-    Not the same as “next step only” (continuation) or “something changed” (plan update on screen 13).
+    How Unstuck stays current after the first plan. <strong>Shipped today:</strong> in-app check-in from the dashboard,
+    progress summary, optional page-level counselor contact (counted on screen 15).
+    <strong>V2:</strong> email/token check-in, 140-char barrier text, adaptive replan LLM.
+    Not the same as “next step only” (continuation) or “something changed” (plan update).
   </p>
 
   <nav class="workflow-tabs" aria-label="Workflow views">
@@ -42,33 +44,34 @@
 
     <div class="flow-step">
       <div class="flow-box flow-email">
-        <strong>Email</strong>
-        Check-in notification
-        <span class="sub">Tokenized link · no login required</span>
+        <strong>Today (pilot)</strong>
+        Open check-in in-app
+        <span class="sub"><code>/intake/check-in</code> · same browser / <code>visitor_id</code></span>
       </div>
     </div>
+    <div class="flow-optional">V2: email / SMS with tokenized link · no login required</div>
     <div class="flow-arrow">↓</div>
 
     <div class="flow-step">
       <div class="flow-box flow-ui">
         <strong>Screen 10</strong>
         Check-in response
-        <span class="sub">Per task: done / in progress / no / attempted / contact counselor</span>
+        <span class="sub">Per task: done / in progress / no / attempted · page-level counselor contact</span>
       </div>
     </div>
     <div class="flow-arrow">↓</div>
 
     <div class="flow-branch">
       <div class="flow-box flow-screen">
-        <strong>If “attempted” + 140-char text</strong>
+        <strong>V2: if “attempted” + 140-char text</strong>
         Distress screening
       </div>
     </div>
     <div class="flow-branch">
       <div class="flow-box flow-support">
-        <strong>If contact counselor chosen</strong>
-        Disclosure + confirm → notify Ms. Smith (screen 17)
-        <span class="sub">Name + flag only · not plan content</span>
+        <strong>If counselor contact requested</strong>
+        Saved on check-in · counted on screen 15
+        <span class="sub">V2: notify Ms. Smith (screen 17) · name + flag only</span>
       </div>
     </div>
     <div class="flow-arrow">↓</div>
@@ -81,7 +84,7 @@
       </div>
     </div>
     <div class="flow-arrow">↓</div>
-    <div class="flow-optional">Student may log in later or tap “Update my plan”</div>
+    <div class="flow-optional">Student may return later or tap “Update my plan”</div>
     <div class="flow-arrow">↓</div>
 
     <div class="flow-step">
@@ -92,13 +95,13 @@
       </div>
     </div>
     <div class="flow-arrow">↓</div>
-    <div class="flow-optional">If tasks incomplete or “attempted but could not complete”</div>
+    <div class="flow-optional">V2: if tasks incomplete or “attempted but could not complete”</div>
     <div class="flow-arrow">↓</div>
 
     <div class="flow-step">
       <div class="flow-box flow-ai">
-        <strong>AI</strong>
-        Adaptive replanning (Sonnet)
+        <strong>AI (V2)</strong>
+        Adaptive replanning
         <span class="sub">Prior plan + check-in history + dates → new scope + 7 days</span>
       </div>
     </div>
@@ -106,7 +109,7 @@
 
     <div class="flow-step">
       <div class="flow-box flow-ui">
-        <strong>Screen 08</strong>
+        <strong>Screen 08 (V2 path)</strong>
         Updated plan
       </div>
     </div>
