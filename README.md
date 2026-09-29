@@ -16,7 +16,7 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 
 **Live app:** https://unstuck-app-flame.vercel.app/ — entry hub (student / counselor). Faculty screening demo: `/demo` (linked from this site, not the app hub).
 
-**Backlog tracking:** [Linear · tcampbell](https://linear.app/tcampbell) — `index.html#backlog` is an archive snapshot.
+**Backlog tracking:** [Linear · tcampbell](https://linear.app/tcampbell) only — not maintained in this build-spec.
 
 ## Edit locally
 
@@ -28,7 +28,7 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 
 | File | What changed |
 |------|----------------|
-| **`index.html`** | Journey hub purpose; entry `/` + `/home`; `/demo` for faculty; backlog Linear-first, CAP removed |
+| **`index.html`** | Journey hub; Linear-only backlog (no tables); entry `/` + `/home`; `/demo` for faculty |
 | **`wireframe.html`** | Entry hub 00 + `/home`; Live labels; check-in / paths |
 | **`fields.html`** | Check-in counselor contact not per-task; barrier text = V2 |
 | **`workflows.html`** | Live prototype map; entry hub wording |
@@ -45,7 +45,7 @@ Published from public repo [TeriCampbell/unstuck-build-spec](https://github.com/
 
 | File | Purpose |
 |------|---------|
-| `index.html` | **User journeys** — filterable map of student + counselor flows; backlog archive |
+| `index.html` | **User journeys** — filterable map of student + counselor flows; backlog points to Linear |
 | `fields.html` | Required / optional inputs + API routes |
 | `prompts.html` | Prompt architecture, JSON shapes, **production v1 text** (`#production-prompts`) |
 | `wireframe.html` | Screen map (links to live wireframe) |

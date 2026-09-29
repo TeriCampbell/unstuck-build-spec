@@ -40,7 +40,7 @@
     <strong>Wireframe:</strong>
     <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Interactive wireframe (17 screens)</a>
     · <a href="wireframe.html">Screen map</a> on this site ·
-    <a href="index.html#backlog">Product backlog archive</a>
+    <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Product backlog (Linear)</a>
   </div>
 
   <h2>Filter by journey</h2>
@@ -196,7 +196,6 @@
   <section id="backlog" class="backlog-section">
     <div class="backlog-header">
       <h2>Product backlog</h2>
-      <span class="updated">Last updated · Sept 2026 · Archive snapshot</span>
     </div>
 
     <aside class="backlog-info" role="note">
@@ -208,212 +207,16 @@
         </svg>
       </span>
       <p>
-        Day-to-day backlog tracking lives in
-        <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Linear</a>.
-        Tables below are a readable archive of product priorities for this build-spec (status may lag Linear).
+        The product backlog lives in
+        <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Linear</a>
+        only. This build-spec does not maintain a backlog list.
       </p>
     </aside>
 
     <p class="lead" style="margin-top:0">
-      Open and deferred product work for the live prototype. Engineering detail also lives in the app repo
-      (<code>BACKLOG.md</code>). Prefer Linear for current status.
-    </p>
-
-    <div class="backlog-legend">
-      <span><span class="priority priority-p0next">P0-next</span> First post-MVP slice</span>
-      <span><span class="priority priority-p1">P1</span> Before wide pilot</span>
-      <span><span class="priority priority-p2">P2</span> Polish / quality</span>
-      <span><span class="priority priority-p3">P3</span> Later / vision</span>
-      <span><span class="status status-done">Done</span> Shipped</span>
-      <span><span class="status status-next">Next</span> Active</span>
-    </div>
-
-    <table class="backlog-table">
-      <caption>Top priority (V2)</caption>
-      <thead>
-        <tr>
-          <th class="col-id">ID</th>
-          <th>Item</th>
-          <th class="col-pri">Priority</th>
-          <th class="col-status">Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-id">P0-next</td>
-          <td>Adult help to set up plan resources (parent / trusted adult)</td>
-          <td><span class="priority priority-p0next">P0-next</span></td>
-          <td><span class="status status-open">Planned</span></td>
-          <td>Per-resource setup on plan (08) + check-in (10); see Linear TCA-19</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="backlog-table">
-      <caption>Open — engineering</caption>
-      <thead>
-        <tr>
-          <th class="col-id">ID</th>
-          <th>Item</th>
-          <th class="col-pri">Priority</th>
-          <th class="col-status">Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-id">ENG-01</td>
-          <td>Extract-tasks eval fixture</td>
-          <td><span class="priority priority-p1">P1</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>Free text “2 AP exams…” → score extraction JSON</td>
-        </tr>
-        <tr>
-          <td class="col-id">ENG-02</td>
-          <td>Acknowledgment mirrors all confirmed <code>tasks[]</code></td>
-          <td><span class="priority priority-p2">P2</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>Master prompt nudge</td>
-        </tr>
-        <tr>
-          <td class="col-id">ENG-03</td>
-          <td>Align plan-update prompt with master v1.3 + enforcement</td>
-          <td><span class="priority priority-p2">P2</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>Same <code>enforcePlanRules</code> on replan</td>
-        </tr>
-        <tr>
-          <td class="col-id">ENG-04</td>
-          <td>Live preview on screen 05 (optional)</td>
-          <td><span class="priority priority-p2">P2</span></td>
-          <td><span class="status status-open">Open</span></td>
-          <td>Parsed summary before Continue</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="backlog-table">
-      <caption>Vision / V2 (deferred)</caption>
-      <thead>
-        <tr>
-          <th class="col-id">ID</th>
-          <th>Item</th>
-          <th class="col-pri">Priority</th>
-          <th class="col-status">Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-id">V2-01</td>
-          <td>OAuth / email login (screen 01)</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>Today: <code>visitor_id</code> + pilot code; entry hub at <code>/</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">V2-02</td>
-          <td>Resend email/SMS check-in tokens</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>Today: in-app <code>/intake/check-in</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">V2-03</td>
-          <td>Trusted contact setup (screen 03)</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>Related to P0-next adult setup</td>
-        </tr>
-        <tr>
-          <td class="col-id">V2-04</td>
-          <td>Dedicated plan-update screen (13)</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>Today: update via 05 pre-fill</td>
-        </tr>
-        <tr>
-          <td class="col-id">V2-05</td>
-          <td>Counselor resource config (16) + push on contact (17)</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>Screen 15 aggregates shipped</td>
-        </tr>
-        <tr>
-          <td class="col-id">V2-06</td>
-          <td>Production FERPA / legal ops + mandatory reporting workflows</td>
-          <td><span class="priority priority-p3">P3</span></td>
-          <td><span class="status status-open">Deferred</span></td>
-          <td>Documented for launch readiness; counsel pre-launch</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="backlog-table backlog-done-section">
-      <caption>Done — prototype (Phases 2–4)</caption>
-      <thead>
-        <tr>
-          <th class="col-id">ID</th>
-          <th>Item</th>
-          <th class="col-pri">Priority</th>
-          <th class="col-status">Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-id">DONE-01</td>
-          <td>Intake → plan → screening tiers</td>
-          <td><span class="priority priority-done">Shipped</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td>Phase 2b · master v1.3 · screening v1.1 · Haiku-first routing</td>
-        </tr>
-        <tr>
-          <td class="col-id">DONE-02</td>
-          <td>Supabase persistence + events</td>
-          <td><span class="priority priority-done">Shipped</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td>2c-db · 2d-events</td>
-        </tr>
-        <tr>
-          <td class="col-id">DONE-03</td>
-          <td>Return dashboard + check-in + progress</td>
-          <td><span class="priority priority-done">Shipped</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td>Phase 3 · <code>visitor_id</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">DONE-04</td>
-          <td>Counselor dashboard (screen 15)</td>
-          <td><span class="priority priority-done">Shipped</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td>Phase 4 · KPIs · Patterns · demo seed</td>
-        </tr>
-        <tr>
-          <td class="col-id">DONE-05</td>
-          <td>Deploy PRD prose (Google Doc)</td>
-          <td><span class="priority priority-done">Shipped</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td><code>DEPLOY_Google_Doc_Paste.md</code></td>
-        </tr>
-        <tr>
-          <td class="col-id">DONE-06</td>
-          <td>Develop + eval suite + build spec pages</td>
-          <td><span class="priority priority-done">Shipped</span></td>
-          <td><span class="status status-done">Done</span></td>
-          <td>fields · prompts · eval · screening</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p class="backlog-footer-note">
-      <strong>Live artifacts:</strong>
-      <a href="https://unstuck-app-flame.vercel.app/" target="_blank" rel="noopener">Prototype</a> ·
-      <a href="https://tericampbell.github.io/unstuck_wireframe.html" target="_blank" rel="noopener">Wireframe</a> ·
-      <a href="eval.html">Evaluation</a> ·
-      <a href="https://github.com/TeriCampbell/unstuck-app" target="_blank" rel="noopener">App repo</a> ·
-      <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Linear</a>
+      Open
+      <a href="https://linear.app/tcampbell" target="_blank" rel="noopener">Linear · tcampbell</a>
+      for current priorities, status, and issue detail.
     </p>
   </section>
 
